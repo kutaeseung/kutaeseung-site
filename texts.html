@@ -5,15 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ku Taeseung - Texts</title>
   <link rel="icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
 
 
+
   <header>
     <nav class="nav-text"><a href="index.html" class="nav-link">Ku Taeseung</a> / <a href="exhibitions.html" class="nav-link">Exhibitions</a> / <a href="works.html" class="nav-link">Selected Works</a> / <a href="texts.html" class="nav-link active">Texts</a> / <a href="info.html" class="nav-link">Info</a> / <a href="etc.html" class="nav-link">etc...</a></nav>
   </header>
+
 
 
 
@@ -24,10 +29,12 @@
 
 
 
+
       <!-- 우측 8칸: 사각형 리더 뷰 본문 -->
       <section class="reader-content" id="reader-content"></section>
     </div>
   </main>
+
 
 
 
@@ -46,8 +53,10 @@
 
 
 
+
         const groupDiv = document.createElement('div');
         groupDiv.className = 'reader-group';
+
 
 
 
@@ -64,11 +73,13 @@
 
 
 
+
             // 목차 활성화
             document.querySelectorAll('.reader-link').forEach(el => el.classList.remove('active'));
             link.classList.add('active');
           };
           groupDiv.appendChild(link);
+
 
 
 
@@ -78,14 +89,17 @@
           article.className = 'reader-article';
           article.style.display = 'none';
 
+
           const body = document.createElement('div');
           body.className = 'reader-body';
+
 
           item.content.forEach(paragraph => {
             const p = document.createElement('p');
             p.textContent = paragraph;
             body.appendChild(p);
           });
+
 
           if (item.footnotes && item.footnotes.length > 0) {
             const footnotesDiv = document.createElement('div');
@@ -94,6 +108,7 @@
             footnotesDiv.style.paddingTop = '16px';
             footnotesDiv.style.borderTop = '1px solid #eeeeee';
             footnotesDiv.style.lineHeight = '1.4';
+
 
             item.footnotes.forEach(footnote => {
               const fnP = document.createElement('p');
@@ -104,12 +119,15 @@
               footnotesDiv.appendChild(fnP);
             });
 
+
             body.appendChild(footnotesDiv);
           }
+
 
           article.appendChild(body);
           contentContainer.appendChild(article);
         });
+
 
 
 
@@ -126,6 +144,7 @@
         `;
       });
   </script>
+
 
 
 

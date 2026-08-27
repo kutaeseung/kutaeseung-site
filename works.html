@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ku Taeseung - Selected Works</title>
   <link rel="icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
   <style>
     /* Selected Works 전용 인라인 CSS */
@@ -18,6 +21,7 @@
     }
 
 
+
     .work-frame {
       display: inline-flex;
       flex-direction: column;
@@ -27,6 +31,7 @@
       height: calc(var(--h, 60) * 2.8px);
       cursor: pointer;
     }
+
 
 
     .work-frame img {
@@ -39,9 +44,11 @@
     }
 
 
+
     .work-frame:hover img {
       opacity: 0.85;
     }
+
 
 
     /* 라이트박스 모달 */
@@ -60,12 +67,14 @@
     }
 
 
+
     .work-modal.active {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
     }
+
 
 
     .modal-box {
@@ -79,6 +88,7 @@
     }
 
 
+
     .modal-box img {
       max-width: 82vw;
       max-height: 75vh;
@@ -90,6 +100,7 @@
     }
 
 
+
     .modal-caption {
       margin-top: 20px;
       text-align: center;
@@ -99,12 +110,14 @@
       line-height: 1.5;
     }
 
+
     /* 모바일 반응형: 좁은 화면에서 벽면 스케일 축소 (가로 스크롤 방지) */
     @media (max-width: 768px) {
       .works-wall {
         gap: 16px;
         row-gap: 40px;
       }
+
 
       .work-frame {
         height: calc(var(--h, 60) * 1.6px);
@@ -115,13 +128,16 @@
 <body>
 
 
+
   <header>
     <nav class="nav-text"><a href="index.html" class="nav-link">Ku Taeseung</a> / <a href="exhibitions.html" class="nav-link">Exhibitions</a> / <a href="works.html" class="nav-link active">Selected Works</a> / <a href="texts.html" class="nav-link">Texts</a> / <a href="info.html" class="nav-link">Info</a> / <a href="etc.html" class="nav-link">etc...</a></nav>
   </header>
 
 
+
   <main>
     <div class="works-wall" id="works-wall">
+
 
 
       <!-- 1. colorchecker.jpg -->
@@ -130,10 +146,12 @@
       </div>
 
 
+
       <!-- 2. duet1.jpg -->
       <div class="work-frame" style="--h: 55;" data-title="Duet 1" data-year="2024" data-material="" data-size="">
         <img src="images/selected-works/duet1.jpg" alt="Duet 1">
       </div>
+
 
 
       <!-- 3. duet2.jpg -->
@@ -142,10 +160,12 @@
       </div>
 
 
+
       <!-- 4. frank.jpg -->
       <div class="work-frame" style="--h: 65;" data-title="Frank" data-year="2024" data-material="" data-size="">
         <img src="images/selected-works/frank.jpg" alt="Frank">
       </div>
+
 
 
       <!-- 5. greenwood.jpg -->
@@ -154,10 +174,12 @@
       </div>
 
 
+
       <!-- 6. middle eye(I).png -->
       <div class="work-frame" style="--h: 50;" data-title="Middle Eye (I)" data-year="2023" data-material="" data-size="">
         <img src="images/selected-works/middle eye(I).png" alt="Middle Eye (I)">
       </div>
+
 
 
       <!-- 7. optogram.png -->
@@ -166,10 +188,12 @@
       </div>
 
 
+
       <!-- 8. optography.jpg -->
       <div class="work-frame" style="--h: 45;" data-title="Optography" data-year="2023" data-material="" data-size="">
         <img src="images/selected-works/optography.jpg" alt="Optography">
       </div>
+
 
 
       <!-- 9. strokes.png -->
@@ -178,10 +202,12 @@
       </div>
 
 
+
       <!-- 10. sunpainting.png -->
       <div class="work-frame" style="--h: 65;" data-title="Sun Painting" data-year="2024" data-material="" data-size="">
         <img src="images/selected-works/sunpainting.png" alt="Sun Painting">
       </div>
+
 
 
       <!-- 11. woodnew.png -->
@@ -190,14 +216,17 @@
       </div>
 
 
+
       <!-- 12. woodnew2.png -->
       <div class="work-frame" style="--h: 58;" data-title="Wood New 2" data-year="2024" data-material="" data-size="">
         <img src="images/selected-works/woodnew2.png" alt="Wood New 2">
       </div>
 
 
+
     </div>
   </main>
+
 
 
   <!-- 라이트박스 모달 -->
@@ -209,6 +238,7 @@
   </div>
 
 
+
   <script>
     // 작품 프레임 클릭 처리: onclick 문자열 조립 대신 이벤트 리스너 1개로 위임
     document.getElementById('works-wall').addEventListener('click', function(e) {
@@ -218,6 +248,7 @@
     });
 
 
+
     function openModal(element, title, year, material, size) {
       const img = element.querySelector('img');
       const modal = document.getElementById('work-modal');
@@ -225,7 +256,9 @@
       const modalCaption = document.getElementById('modal-caption');
 
 
+
       modalImg.src = img.src;
+
 
 
       // 캡션: 제목, 제작연도, 재료, 크기(세로×가로cm) - 낫표(〈〉) 없이 순수 텍스트 나열
@@ -236,12 +269,15 @@
       if (size) parts.push(size);
 
 
+
       modalCaption.textContent = parts.join(', ');
+
 
 
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
     }
+
 
 
     function closeModal() {
@@ -251,10 +287,12 @@
     }
 
 
+
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeModal();
     });
   </script>
+
 
 
 </body>
