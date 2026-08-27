@@ -1,48 +1,51 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ku Taeseung - Amator</title>
-  <link rel="icon" href="favicon.ico">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ku Taeseung - Amator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-
-  <header>
-    <nav class="nav-text"><a href="index.html" class="nav-link">Ku Taeseung</a> / <a href="exhibitions.html" class="nav-link active">Exhibitions</a> / <a href="works.html" class="nav-link">Selected Works</a> / <a href="texts.html" class="nav-link">Texts</a> / <a href="info.html" class="nav-link">Info</a> / <a href="etc.html" class="nav-link">etc...</a></nav>
-  </header>
-
-
-  <main>
-    <div class="grid-12">
-
-
-      <div class="grid-left-4">
-        <h1 class="exhibition-title">아마토 Amator</h1>
-        <p class="exhibition-meta">
-          Long Vacance<br>
-          2026. 00. 00 – 00. 00<br>
-        </p>
-        <div class="exhibition-statement">
-          <p>전시 서문 또는 작가노트 텍스트입니다. 본명조 서체가 적용되어 정갈하고 차분한 도록 판형의 활자 질감을 보여줍니다.</p>
+    <header>
+        <nav class="nav-text">
+            <a href="index.html" class="nav-link">Ku Taeseung</a>
+            <a href="exhibitions.html" class="nav-link active">Exhibitions</a>
+            <a href="works.html" class="nav-link">Selected Works</a>
+            <a href="texts.html" class="nav-link">Texts</a>
+            <a href="info.html" class="nav-link">Info</a>
+            <a href="etc.html" class="nav-link">etc...</a>
+        </nav>
+    </header>
+    <main>
+        <!-- Exhibitions > Amator -->
+        <div class="grid-12">
+            <!-- 왼쪽 4칸: 제목, 기간, 서문 -->
+            <div class="grid-left-4">
+                <h1 class="exhibition-title">Amator</h1>
+                <p class="exhibition-meta">
+                    Long Vacance<br>
+                    2026. 00. 00 – 00. 00
+                </p>
+                <p class="exhibition-statement">
+                    전시 서문 또는 작가노트 텍스트가 들어가는 공간입니다. 왼쪽 4칸의 폭에 맞춰 차분하게 정렬됩니다.
+                </p>
+            </div>
+            <!-- 오른쪽 8칸: 설치 전경 사진들 -->
+            <div class="grid-right-8">
+                <div class="archive-photo-item">
+                    <img src="images/Amator0.jpg" alt="Installation view 1">
+                    <p class="caption-right">Installation view 01</p>
+                </div>
+                <div class="archive-photo-item">
+                    <img src="images/Amator0.jpg" alt="Installation view 2">
+                    <p class="caption-right">Installation view 02</p>
+                </div>
+            </div>
         </div>
-      </div>
-
-
-      <div class="grid-right-8 archive-photos">
-        <div>
-          <!-- exhibitions 전용 하위 폴더 경로 적용 -->
-          <img src="images/exhibitions/Amator_0.jpg" alt="Installation view 01">
-
-        </div>
-      </div>
-
-
-    </div>
-  </main>
-
-
+    </main>
 </body>
 </html>

@@ -1,133 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ku Taeseung - Texts</title>
-  <link rel="icon" href="favicon.ico">
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ku Taeseung - Texts</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-
-
-  <header>
-    <nav class="nav-text"><a href="index.html" class="nav-link">Ku Taeseung</a> / <a href="exhibitions.html" class="nav-link">Exhibitions</a> / <a href="works.html" class="nav-link">Selected Works</a> / <a href="texts.html" class="nav-link active">Texts</a> / <a href="info.html" class="nav-link">Info</a> / <a href="etc.html" class="nav-link">etc...</a></nav>
-  </header>
-
-
-
-  <main>
-    <div class="reader-container">
-      <!-- 좌측 4칸: JSON 기반 자동 생성 목차 -->
-      <nav class="reader-nav" id="reader-nav"></nav>
-
-
-
-      <!-- 우측 8칸: 사각형 리더 뷰 본문 -->
-      <section class="reader-content" id="reader-content"></section>
-    </div>
-  </main>
-
-
-
-  <script>
-    // JSON 데이터 로드 및 렌더링
-    fetch('texts-data.json')
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        return response.json();
-      })
-      .then(data => {
-        const navContainer = document.getElementById('reader-nav');
-        const contentContainer = document.getElementById('reader-content');
-
-
-
-        const groupDiv = document.createElement('div');
-        groupDiv.className = 'reader-group';
-
-
-
-        data.forEach(item => {
-          // 1. 목차 링크 생성 (textContent만 사용 — HTML로 해석될 위험 없음)
-          const link = document.createElement('a');
-          link.className = 'reader-link';
-          link.textContent = `${item.author}, 〈${item.title}〉, ${item.year}`;
-          link.onclick = function() {
-            // 본문 전환
-            document.querySelectorAll('.reader-article').forEach(el => el.style.display = 'none');
-            const target = document.getElementById(item.id);
-            if (target) target.style.display = 'block';
-
-
-
-            // 목차 활성화
-            document.querySelectorAll('.reader-link').forEach(el => el.classList.remove('active'));
-            link.classList.add('active');
-          };
-          groupDiv.appendChild(link);
-
-
-
-          // 2. 본문 아티클 생성 (제목/저자/연도 헤더 없이 본문부터 바로 표시)
-          const article = document.createElement('article');
-          article.id = item.id;
-          article.className = 'reader-article';
-          article.style.display = 'none';
-
-          const body = document.createElement('div');
-          body.className = 'reader-body';
-
-          item.content.forEach(paragraph => {
-            const p = document.createElement('p');
-            p.textContent = paragraph;
-            body.appendChild(p);
-          });
-
-          if (item.footnotes && item.footnotes.length > 0) {
-            const footnotesDiv = document.createElement('div');
-            footnotesDiv.className = 'reader-footnotes';
-            footnotesDiv.style.marginTop = '36px';
-            footnotesDiv.style.paddingTop = '16px';
-            footnotesDiv.style.borderTop = '1px solid #eeeeee';
-            footnotesDiv.style.lineHeight = '1.4';
-
-            item.footnotes.forEach(footnote => {
-              const fnP = document.createElement('p');
-              fnP.style.marginBottom = '4px';
-              fnP.style.textIndent = '0';
-              fnP.style.fontSize = '12.5px';
-              fnP.textContent = footnote;
-              footnotesDiv.appendChild(fnP);
-            });
-
-            body.appendChild(footnotesDiv);
-          }
-
-          article.appendChild(body);
-          contentContainer.appendChild(article);
-        });
-
-
-
-        navContainer.appendChild(groupDiv);
-      })
-      .catch(err => {
-        console.error('texts-data.json 로드 실패:', err);
-        // 고정 문구(직접 작성한 문자열)이므로 innerHTML을 그대로 사용해도 안전함
-        document.getElementById('reader-content').innerHTML = `
-          <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:60vh; width:100%; text-align:center; gap:6px;">
-            <p style="text-indent:0;">일시적인 오류로 글을 불러올 수 없습니다. 잠시 후 다시 시도해 주세요.</p>
-            <p style="text-indent:0;">We are unable to load the texts at this time. Please try again later.</p>
-          </div>
-        `;
-      });
-  </script>
-
-
-
+    <header>
+        <nav class="nav-text">
+            <a href="index.html" class="nav-link">Ku Taeseung</a>
+            <a href="exhibitions.html" class="nav-link">Exhibitions</a>
+            <a href="works.html" class="nav-link">Selected Works</a>
+            <a href="texts.html" class="nav-link active">Texts</a>
+            <a href="info.html" class="nav-link">Info</a>
+            <a href="etc.html" class="nav-link">etc...</a>
+        </nav>
+    </header>
+    <main>
+        <!-- Texts Content -->
+    </main>
 </body>
 </html>
