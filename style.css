@@ -2,104 +2,104 @@
 @charset "UTF-8";
 
 /* ====================================================
-1. Design Tokens & Variables
+2. Design Tokens & Variables
 ==================================================== */
 :root {
-  --text-color: #000000;
-  --text-muted: #555555;
-  --bg-color: #ffffff;
-  --highlight-yellow: #ffff00;
+--text-color: #000000;
+--text-muted: #555555;
+--bg-color: #ffffff;
+--highlight-yellow: #ffff00;
 
-  --font-serif: "Times New Roman", Times, "Noto Serif KR", "Batang", serif;
-  --font-size-base: 15px;
-  --font-size-small: 14px;
-  --line-height-base: 1.45;
+--font-serif: "Times New Roman", Times, "Noto Serif KR", "Batang", serif;
+--font-size-base: 15px;
+--font-size-small: 14px;
+--line-height-base: 1.45;
 
-  --page-padding: 20px;
-  --grid-gap: 20px;
+--page-padding: 20px;
+--grid-gap: 20px;
 }
 
 /* ====================================================
-2. Global Reset & Base
+3. Global Reset & Base
 ==================================================== */
 html {
-  overflow-y: scroll;
+overflow-y: scroll;
 }
 
 *, *::before, *::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+margin: 0;
+padding: 0;
+box-sizing: border-box;
 }
 
 ::selection {
-  background-color: var(--highlight-yellow);
-  color: var(--text-color);
+background-color: var(--highlight-yellow);
+color: var(--text-color);
 }
 
 ::-moz-selection {
-  background-color: var(--highlight-yellow);
-  color: var(--text-color);
+background-color: var(--highlight-yellow);
+color: var(--text-color);
 }
 
 body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  font-family: var(--font-serif);
-  font-size: var(--font-size-base);
-  line-height: var(--line-height-base);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+background-color: var(--bg-color);
+color: var(--text-color);
+font-family: var(--font-serif);
+font-size: var(--font-size-base);
+line-height: var(--line-height-base);
+-webkit-font-smoothing: antialiased;
+-moz-osx-font-smoothing: grayscale;
 }
 
 /* ====================================================
-3. Header & Navigation
+4. Header & Navigation
 ==================================================== */
 header {
-  position: static;
-  width: 100%;
-  padding: var(--page-padding) var(--page-padding) 0 var(--page-padding);
-  background: var(--bg-color);
+position: static;
+width: 100%;
+padding: var(--page-padding) var(--page-padding) 0 var(--page-padding);
+background: var(--bg-color);
 }
 
 .nav-text {
-  font-family: inherit;
-  font-size: inherit;
-  line-height: inherit;
-  color: var(--text-color);
-  white-space: nowrap;
+font-family: inherit;
+font-size: inherit;
+line-height: inherit;
+color: var(--text-color);
+white-space: nowrap;
 }
 
 .nav-link {
-  color: var(--text-color);
-  text-decoration: none;
-  font-weight: normal;
+color: var(--text-color);
+text-decoration: none;
+font-weight: normal;
 }
 
 .nav-link:hover,
 .nav-link.active {
-  background-color: var(--highlight-yellow);
-  color: var(--text-color);
+background-color: var(--highlight-yellow);
+color: var(--text-color);
 }
 
 /* ====================================================
-4. Main Content Layout
+5. Main Content Layout
 ==================================================== */
 main {
-  padding: 40px var(--page-padding) 100px var(--page-padding);
-  width: 100%;
+padding: 40px var(--page-padding) 100px var(--page-padding);
+width: 100%;
 }
 
 /* ====================================================
-5. 12-Column Grid System
+6. 12-Column Grid System
 ==================================================== */
 .grid-12,
 .grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  column-gap: var(--grid-gap);
-  row-gap: 60px;
-  width: 100%;
+display: grid;
+grid-template-columns: repeat(12, 1fr);
+column-gap: var(--grid-gap);
+row-gap: 60px;
+width: 100%;
 }
 
 /* Column Spans (1 ~ 12) */
@@ -132,125 +132,125 @@ main {
 
 /* Preset Layout Columns */
 .grid-left-4 {
-  grid-column: 1 / 5;
+grid-column: 1 / 5;
 }
 
 .grid-right-8,
 .item-block {
-  grid-column: 5 / 13;
-  width: 100%;
+grid-column: 5 / 13;
+width: 100%;
 }
 
 /* ====================================================
-6. Media & Captions
+7. Media & Captions
 ==================================================== */
 img {
-  width: 100% !important;
-  max-width: 100% !important;
-  height: auto;
-  display: block;
+width: 100% !important;
+max-width: 100% !important;
+height: auto;
+display: block;
 }
 
 .item-link {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-  cursor: pointer;
-  width: 100%;
+text-decoration: none;
+color: inherit;
+display: block;
+cursor: pointer;
+width: 100%;
 }
 
 .item-link img {
-  transition: opacity 0.2s ease;
+transition: opacity 0.2s ease;
 }
 
 .item-link:hover img {
-  opacity: 0.85;
+opacity: 0.85;
 }
 
 .caption-right {
-  margin-top: 10px;
-  text-align: right;
-  font-size: var(--font-size-small);
-  color: var(--text-color);
-  white-space: nowrap;
+margin-top: 10px;
+text-align: right;
+font-size: var(--font-size-small);
+color: var(--text-color);
+white-space: nowrap;
 }
 
 .caption-left {
-  margin-top: 10px;
-  text-align: left;
-  font-size: var(--font-size-small);
-  color: var(--text-color);
+margin-top: 10px;
+text-align: left;
+font-size: var(--font-size-small);
+color: var(--text-color);
 }
 
 /* ====================================================
-7. Exhibition & Archive Typography
+8. Exhibition & Archive Typography
 ==================================================== */
 .exhibition-title {
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 8px;
+font-size: 16px;
+font-weight: 500;
+margin-bottom: 8px;
 }
 
 .exhibition-meta {
-  font-size: var(--font-size-small);
-  color: var(--text-muted);
-  line-height: 1.6;
-  margin-bottom: 24px;
+font-size: var(--font-size-small);
+color: var(--text-muted);
+line-height: 1.6;
+margin-bottom: 24px;
 }
 
 .exhibition-statement {
-  font-size: var(--font-size-small);
-  line-height: 1.7;
+font-size: var(--font-size-small);
+line-height: 1.7;
 }
 
 .archive-photos {
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
+display: flex;
+flex-direction: column;
+gap: 60px;
 }
 
 /* ====================================================
-8. Mobile Responsive (< 768px)
+9. Mobile Responsive (< 768px)
 ==================================================== */
 @media (max-width: 768px) {
-  :root {
-    --page-padding: 20px;
-    --grid-gap: 16px;
-    --font-size-base: 14px;
-  }
+:root {
+--page-padding: 20px;
+--grid-gap: 16px;
+--font-size-base: 14px;
+}
 
-  header {
-    padding: var(--page-padding) var(--page-padding) 0 var(--page-padding);
-  }
+header {
+padding: var(--page-padding) var(--page-padding) 0 var(--page-padding);
+}
 
-  .nav-text {
-    white-space: normal;
-  }
+.nav-text {
+white-space: normal;
+}
 
-  main {
-    padding: 24px var(--page-padding) 40px var(--page-padding);
-  }
+main {
+padding: 24px var(--page-padding) 40px var(--page-padding);
+}
 
-  .grid-12,
-  .grid {
-    grid-template-columns: 1fr;
-    row-gap: 40px;
-  }
+.grid-12,
+.grid {
+grid-template-columns: 1fr;
+row-gap: 40px;
+}
 
-  .col-1, .col-2, .col-3, .col-4, .col-5, .col-6,
-  .col-7, .col-8, .col-9, .col-10, .col-11, .col-12,
-  .grid-left-4,
-  .grid-right-8,
-  .item-block {
-    grid-column: 1 / -1 !important;
-  }
+.col-1, .col-2, .col-3, .col-4, .col-5, .col-6,
+.col-7, .col-8, .col-9, .col-10, .col-11, .col-12,
+.grid-left-4,
+.grid-right-8,
+.item-block {
+grid-column: 1 / -1 !important;
+}
 
-  .start-1, .start-2, .start-3, .start-4, .start-5, .start-6,
-  .start-7, .start-8, .start-9, .start-10, .start-11, .start-12 {
-    grid-column-start: 1 !important;
-  }
+.start-1, .start-2, .start-3, .start-4, .start-5, .start-6,
+.start-7, .start-8, .start-9, .start-10, .start-11, .start-12 {
+grid-column-start: 1 !important;
+}
 
-  .caption-right {
-    white-space: normal;
-  }
+.caption-right {
+white-space: normal;
+}
 }
