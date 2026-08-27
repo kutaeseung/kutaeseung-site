@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ku Taeseung - Selected Works</title>
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Selected Works 전용 인라인 CSS */
+    .works-wall {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 24px;
+      row-gap: 80px;
+      width: 100%;
+    }
+
+
+    .work-frame {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      flex-shrink: 0;
+      /* 1cm = 2.8px 비례 스케일 */
+      height: calc(var(--h, 60) * 2.8px);
+      cursor: pointer;
+    }
+
+
+    .work-frame img {
+      height: 100% !important;
+      width: auto !important;
+      max-width: none !important;
+      display: block;
+      object-fit: contain;
+      transition: opacity 0.2s ease;
+    }
+
+
+    .work-frame:hover img {
+      opacity: 0.85;
+    }
+
+
+    /* 라이트박스 모달 */
+    .work-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(255, 255, 255, 0.98);
+      z-index: 99999;
+      cursor: pointer;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+
+
+    .work-modal.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+    .modal-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      max-width: 90vw;
+      max-height: 90vh;
+      cursor: default;
+    }
+
+
+    .modal-box img {
+      max-width: 82vw;
+      max-height: 75vh;
+      width: auto !important;
+      height: auto !important;
+      object-fit: contain;
+      display: block;
+      cursor: pointer;
+    }
+
+
+    .modal-caption {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 15px;
+      font-family: inherit;
+      color: #000000;
+      line-height: 1.5;
+    }
+
+    /* 모바일 반응형: 좁은 화면에서 벽면 스케일 축소 (가로 스크롤 방지) */
+    @media (max-width: 768px) {
+      .works-wall {
+        gap: 16px;
+        row-gap: 40px;
+      }
+
+      .work-frame {
+        height: calc(var(--h, 60) * 1.6px);
+      }
+    }
+  </style>
+</head>
+<body>
+
+
+  <header>
+    <nav class="nav-text"><a href="index.html" class="nav-link">Ku Taeseung</a> / <a href="exhibitions.html" class="nav-link">Exhibitions</a> / <a href="works.html" class="nav-link active">Selected Works</a> / <a href="texts.html" class="nav-link">Texts</a> / <a href="info.html" class="nav-link">Info</a> / <a href="etc.html" class="nav-link">etc...</a></nav>
+  </header>
+
+
+  <main>
+    <div class="works-wall" id="works-wall">
+
+
+      <!-- 1. colorchecker.jpg -->
+      <div class="work-frame" style="--h: 60;" data-title="Colorchecker" data-year="2024" data-material="" data-size="">
+        <img src="images/selected-works/colorchecker.jpg" alt="Colorchecker">
+      </div>
+
+
+      <!-- 2. duet1.jpg -->
+      <div class="work-frame" style="--h: 55;" data-title="Duet 1" data-year="2024" data-material="" data-size="">
+        <img src="images/selected-works/duet1.jpg" alt="Duet 1">
+      </div>
+
+
+      <!-- 3. duet2.jpg -->
+      <div class="work-frame" style="--h: 55;" data-title="Duet 2" data-year="2024" data-material="" data-size="">
+        <img src="images/selected-works/duet2.jpg" alt="Duet 2">
+      </div>
+
+
+      <!-- 4. frank.jpg -->
+      <div class="work-frame" style="--h: 65;" data-title="Frank" data-year="2024" data-material="" data-size="">
+        <img src="images/selected-works/frank.jpg" alt="Frank">
+      </div>
+
+
+      <!-- 5. greenwood.jpg -->
+      <div class="work-frame" style="--h: 70;" data-title="Greenwood" data-year="2024" data-material="" data-size="">
+        <img src="images/selected-works/greenwood.jpg" alt="Greenwood">
+      </div>
+
+
+      <!-- 6. middle eye(I).png -->
+      <div class="work-frame" style="--h: 50;" data-title="Middle Eye (I)" data-year="2023" data-material="" data-size="">
+        <img src="images/selected-works/middle eye(I).png" alt="Middle Eye (I)">
+      </div>
+
+
+      <!-- 7. optogram.png -->
+      <div class="work-frame" style="--h: 45;" data-title="Optogram" data-year="2023" data-material="" data-size="">
+        <img src="images/selected-works/optogram.png" alt="Optogram">
+      </div>
+
+
+      <!-- 8. optography.jpg -->
+      <div class="work-frame" style="--h: 45;" data-title="Optography" data-year="2023" data-material="" data-size="">
+        <img src="images/selected-works/optography.jpg" alt="Optography">
+      </div>
+
+
+      <!-- 9. strokes.png -->
+      <div class="work-frame" style="--h: 60;" data-title="Strokes" data-year="2024" data-material="" data-size="">
+        <img src="images/selected-works/strokes.png" alt="Strokes">
+      </div>
+
+
+      <!-- 10. sunpainting.png -->
+      <div class="work-frame" style="--h: 65;" data-title="Sun Painting" data-year="2024" data-material="" data-size="">
+        <img src="images/selected-works/sunpainting.png" alt="Sun Painting">
+      </div>
+
+
+      <!-- 11. woodnew.png -->
+      <div class="work-frame" style="--h: 58;" data-title="Wood New" data-year="2024" data-material="" data-size="">
+        <img src="images/selected-works/woodnew.png" alt="Wood New">
+      </div>
+
+
+      <!-- 12. woodnew2.png -->
+      <div class="work-frame" style="--h: 58;" data-title="Wood New 2" data-year="2024" data-material="" data-size="">
+        <img src="images/selected-works/woodnew2.png" alt="Wood New 2">
+      </div>
+
+
+    </div>
+  </main>
+
+
+  <!-- 라이트박스 모달 -->
+  <div id="work-modal" class="work-modal" onclick="closeModal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <img id="modal-img" src="" alt="" onclick="closeModal()">
+      <p id="modal-caption" class="modal-caption"></p>
+    </div>
+  </div>
+
+
+  <script>
+    // 작품 프레임 클릭 처리: onclick 문자열 조립 대신 이벤트 리스너 1개로 위임
+    document.getElementById('works-wall').addEventListener('click', function(e) {
+      const frame = e.target.closest('.work-frame');
+      if (!frame) return;
+      openModal(frame, frame.dataset.title, frame.dataset.year, frame.dataset.material, frame.dataset.size);
+    });
+
+
+    function openModal(element, title, year, material, size) {
+      const img = element.querySelector('img');
+      const modal = document.getElementById('work-modal');
+      const modalImg = document.getElementById('modal-img');
+      const modalCaption = document.getElementById('modal-caption');
+
+
+      modalImg.src = img.src;
+
+
+      // 캡션: 제목, 제작연도, 재료, 크기(세로×가로cm) - 낫표(〈〉) 없이 순수 텍스트 나열
+      const parts = [];
+      if (title) parts.push(title);
+      if (year) parts.push(year);
+      if (material) parts.push(material);
+      if (size) parts.push(size);
+
+
+      modalCaption.textContent = parts.join(', ');
+
+
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+
+    function closeModal() {
+      const modal = document.getElementById('work-modal');
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+  </script>
+
+
+</body>
+</html>

@@ -1,0 +1,451 @@
+/* style.css */
+@charset "UTF-8";
+
+
+/* ====================================================
+   1. Design Tokens & Variables
+==================================================== */
+:root {
+  --text-color: #000000;
+  --bg-color: #ffffff;
+  --bg-etc: #EEF8EE;
+  --highlight-yellow: #ffff00;
+
+  /* 영문 Times New Roman, 한글 맥 네이티브 AppleMyungjo */
+  --font-serif: "Times New Roman", Times, "AppleMyungjo", "Apple 명조", "NanumMyeongjo", "Batang", "바탕", serif;
+
+  /* 전역 텍스트 통일: 15px, 400(Normal), 행간 1.5 */
+  --font-size-base: 15px;
+  --font-weight-base: 400;
+  --line-height-base: 1.5;
+
+  --header-top-padding: 16px;
+  --page-padding: 20px;
+  --grid-gap: 10px;
+}
+
+
+/* ====================================================
+   2. Global Reset & Base
+==================================================== */
+html {
+  overflow-y: scroll;
+}
+
+
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+
+::selection {
+  background-color: var(--highlight-yellow);
+  color: var(--text-color);
+}
+::-moz-selection {
+  background-color: var(--highlight-yellow);
+  color: var(--text-color);
+}
+
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: var(--font-serif);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+  line-height: var(--line-height-base);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+
+body.etc-body {
+  background-color: var(--bg-etc) !important;
+}
+
+
+h1, h2, h3, h4, h5, h6, p, a, span, div {
+  font-family: inherit;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+  color: inherit;
+}
+
+
+/* ====================================================
+   3. Header & Navigation
+==================================================== */
+header {
+  position: static;
+  width: 100%;
+  padding: var(--header-top-padding) var(--page-padding) 0 var(--page-padding);
+  background: transparent;
+}
+
+
+.nav-text {
+  font-family: inherit;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+  line-height: var(--line-height-base);
+  color: var(--text-color);
+  white-space: nowrap;
+}
+
+
+.nav-link {
+  color: var(--text-color);
+  text-decoration: none;
+  font-weight: var(--font-weight-base);
+}
+
+
+.nav-link:hover,
+.nav-link.active {
+  background-color: var(--highlight-yellow);
+  color: var(--text-color);
+}
+
+
+/* ====================================================
+   4. Main Content Layout
+==================================================== */
+main {
+  padding: 40px var(--page-padding) 100px var(--page-padding);
+  width: 100%;
+}
+
+
+/* ====================================================
+   5. Texts Page: 리더 뷰
+==================================================== */
+.reader-container {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--grid-gap);
+  width: 100%;
+}
+
+
+.reader-nav {
+  grid-column: 1 / 5;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  position: sticky;
+  top: 40px;
+  align-self: flex-start;
+}
+
+
+.reader-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+
+.reader-link {
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+  line-height: var(--line-height-base);
+  cursor: pointer;
+  display: inline-block;
+  transition: background-color 0.15s ease;
+}
+
+
+.reader-link:hover,
+.reader-link.active {
+  background-color: var(--highlight-yellow);
+  color: var(--text-color);
+}
+
+
+.reader-content {
+  grid-column: 5 / 13;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+
+.reader-article {
+  width: 100%;
+}
+
+
+.reader-body {
+  width: 100%;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+  line-height: 1.65;
+  text-align: justify;
+  word-break: keep-all;
+}
+
+
+.reader-body p {
+  margin-bottom: 20px;
+  text-indent: 1em;
+}
+
+
+/* 본문의 첫 문단에만 적용 (직계 자식만 선택 — 각주 안의 p는 제외) */
+.reader-body > p:first-child {
+  text-indent: 0;
+}
+
+
+/* 드롭캡: 본문 첫 문단의 첫 글자만 확대 (미니멀 버전 - 장식 없음) */
+.reader-body > p:first-child::first-letter {
+  font-size: 2.8em;
+  font-weight: var(--font-weight-base);
+  line-height: 0.8;
+  float: left;
+  padding-right: 8px;
+  padding-top: 4px;
+}
+
+
+/* ====================================================
+   6. Info Page: 정중앙
+==================================================== */
+main.info-main {
+  padding: 0 var(--page-padding) !important;
+  min-height: calc(100vh - 120px) !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+}
+
+
+.info-card {
+  text-align: center !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin: auto !important;
+}
+
+
+.info-name {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+}
+
+
+.info-desc {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+  line-height: var(--line-height-base);
+  color: var(--text-color);
+}
+
+
+.info-contact {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+  line-height: var(--line-height-base);
+}
+
+
+.info-contact a,
+.info-cv a {
+  color: var(--text-color);
+  text-decoration: none;
+}
+
+
+.info-contact a:hover,
+.info-cv a:hover {
+  background-color: var(--highlight-yellow);
+  color: var(--text-color);
+}
+
+
+.info-cv {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+  margin-top: 4px;
+}
+
+
+/* ====================================================
+   7. Exhibitions & Archive Layout
+==================================================== */
+.grid-12,
+.grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  column-gap: var(--grid-gap);
+  row-gap: 60px;
+  width: 100%;
+}
+
+
+.col-1  { grid-column: span 1; }
+.col-2  { grid-column: span 2; }
+.col-3  { grid-column: span 3; }
+.col-4  { grid-column: span 4; }
+.col-5  { grid-column: span 5; }
+.col-6  { grid-column: span 6; }
+.col-7  { grid-column: span 7; }
+.col-8  { grid-column: span 8; }
+.col-9  { grid-column: span 9; }
+.col-10 { grid-column: span 10; }
+.col-11 { grid-column: span 11; }
+.col-12 { grid-column: span 12; }
+
+
+.grid-left-4 {
+  grid-column: 1 / 5;
+}
+
+
+.grid-right-8,
+.item-block {
+  grid-column: 5 / 13;
+  width: 100%;
+}
+
+
+.grid-12 img,
+.grid img,
+.item-block img,
+.archive-photos img {
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+}
+
+
+.item-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  cursor: pointer;
+  width: 100%;
+}
+
+
+.item-link img {
+  transition: opacity 0.2s ease;
+}
+
+
+.item-link:hover img {
+  opacity: 0.85;
+}
+
+
+.caption-right {
+  margin-top: 10px;
+  text-align: right;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+  color: var(--text-color);
+  white-space: nowrap;
+}
+
+
+.caption-left {
+  margin-top: 10px;
+  text-align: left;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+  color: var(--text-color);
+}
+
+
+.exhibition-title {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+  margin-bottom: 6px;
+}
+
+
+.exhibition-meta {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+  color: var(--text-color);
+  line-height: var(--line-height-base);
+  margin-bottom: 20px;
+}
+
+
+.exhibition-statement {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-base);
+  line-height: 1.65;
+}
+
+
+.archive-photos {
+  display: flex;
+  flex-direction: column;
+  gap: 60px;
+}
+
+
+/* ====================================================
+   8. Mobile Responsive (< 768px)
+==================================================== */
+@media (max-width: 768px) {
+  :root {
+    --header-top-padding: 14px;
+    --page-padding: 20px;
+    --grid-gap: 16px;
+    --font-size-base: 14px;
+  }
+
+
+  header {
+    padding: var(--header-top-padding) var(--page-padding) 0 var(--page-padding);
+  }
+
+  .nav-text {
+    white-space: normal;
+  }
+
+
+  main {
+    padding: 24px var(--page-padding) 40px var(--page-padding);
+  }
+
+
+  main.info-main {
+    min-height: calc(100vh - 60px) !important;
+  }
+
+
+  .grid-12,
+  .grid {
+    grid-template-columns: 1fr;
+    row-gap: 40px;
+  }
+
+
+  .col-1, .col-2, .col-3, .col-4, .col-5, .col-6,
+  .col-7, .col-8, .col-9, .col-10, .col-11, .col-12,
+  .grid-left-4,
+  .grid-right-8,
+  .item-block {
+    grid-column: 1 / -1 !important;
+  }
+
+
+  .caption-right {
+    white-space: normal;
+  }
+}
