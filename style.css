@@ -13,8 +13,8 @@
   --highlight-yellow: #ffff00;
 
 
-  /* 영문 Times New Roman, 한글은 웹폰트 Noto Serif KR, 실패 시 시스템 명조 폴백 */
-  --font-serif: "Times New Roman", Times, "Noto Serif KR", "AppleMyungjo", "Apple 명조", "NanumMyeongjo", "Batang", "바탕", serif;
+  /* 영문 Times New Roman, 한글은 Adobe Fonts(AG 최정호 스크린) → 시스템 명조 순 폴백 */
+  --font-serif: "Times New Roman", Times, "agchoijeongho-screen", "AppleMyungjo", "Apple 명조", "NanumMyeongjo", "Batang", "바탕", serif;
 
 
   /* 전역 텍스트 통일: 15px, 400(Normal), 행간 1.5 */
