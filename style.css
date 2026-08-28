@@ -10,6 +10,7 @@
   --text-color: #000000;
   --bg-color: #ffffff;
   --bg-etc: #EEF8EE;
+  --bg-info: #D1E0EF;
   --highlight-yellow: #ffff00;
 
 
@@ -74,6 +75,12 @@ body {
 
 body.etc-body {
   background-color: var(--bg-etc) !important;
+}
+
+
+
+body.info-body {
+  background-color: var(--bg-info) !important;
 }
 
 
