@@ -462,17 +462,7 @@ main.info-main {
 
 
 /* ====================================================
-   8. Selected Works: 벽면 갤러리 (가운데 정렬)
-==================================================== */
-.works-wall {
-  display: flex;
-  justify-content: center;
-}
-
-
-
-/* ====================================================
-   9. Mobile Responsive (< 768px)
+   8. Mobile Responsive (< 768px)
 ==================================================== */
 @media (max-width: 768px) {
   :root {
@@ -489,7 +479,7 @@ main.info-main {
   }
 
 
-  /* 9-1. 헤더 내비게이션: "Ku Taeseung" 줄바꿈 후 나머지 링크 */
+  /* 8-1. 헤더 내비게이션: "Ku Taeseung" 줄바꿈 후 나머지 링크 */
   .nav-text {
     white-space: normal;
     display: block;
@@ -545,20 +535,7 @@ main.info-main {
   }
 
 
-  /* 9-2. Selected Works: 한 작품씩 세로로, 가운데 정렬 (순서는 그대로 유지) */
-  .works-wall {
-    flex-direction: column;
-    align-items: center;
-    gap: 40px;
-  }
-
-  .work-frame {
-    width: 100%;
-    align-items: center;
-  }
-
-
-  /* 9-3. Texts 리더 뷰: 목차를 오른쪽, 본문을 왼쪽에 배치
+  /* 8-2. Texts 리더 뷰: 목차를 오른쪽, 본문을 왼쪽에 배치
      (오른손 엄지 스크롤을 고려 - 엄지가 닿는 우측 여백에 목차를,
      가려지지 않는 좌측에 본문을 두는 책 디자인 원칙 참조) */
   .reader-container {
