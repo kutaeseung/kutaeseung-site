@@ -5,36 +5,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Ku Taeseung - Exhibitions</title>
   <script>
-  (function(d) {
-    var config = {
-      kitId: 'uuz4kkr',
-      scriptTimeout: 3000,
-      async: true
-    },
-    h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/wf-loading/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
-  })(document);
-</script>
+    (function(d) {
+      var config = {
+        kitId: 'uuz4kkr',
+        scriptTimeout: 3000,
+        async: true
+      },
+      h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\bwf-loading\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+    })(document);
+  </script>
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header><nav class="nav-text"><a href="index.html" class="nav-link">Ku Taeseung</a> / <a href="exhibitions.html" class="nav-link active">Exhibitions</a> / <a href="works.html" class="nav-link">Selected Works</a> / <a href="texts.html" class="nav-link">Texts</a> / <a href="info.html" class="nav-link">Info</a> / <a href="etc.html" class="nav-link">etc...</a></nav></header>
+
+
+
+  <header>
+    <nav class="nav-text"><span class="nav-name"><a href="index.html" class="nav-link">Ku Taeseung</a></span><span class="nav-sep"> / </span><span class="nav-links"><a href="exhibitions.html" class="nav-link active">Exhibitions</a> / <a href="works.html" class="nav-link">Selected Works</a> / <a href="texts.html" class="nav-link">Texts</a> / <a href="info.html" class="nav-link">Info</a> / <a href="etc.html" class="nav-link">etc...</a></span></nav>
+  </header>
+
+
+
   <main>
     <div class="grid-12">
+
+
+
       <div class="grid-right-8">
+        <!-- exhibitions 전용 하위 폴더 경로 적용 -->
         <a href="Amator.html" class="item-link">
-          <img src="images/exhibitions/Amator_0.jpg" alt="아마토 Amator, Long Vacance, 2026">
+          <img src="images/exhibitions/Amator_0.jpg" alt="Amator 아마토, Long Vacance, 2026">
           <p class="caption-right">아마토 Amator, Long Vacance, 2026</p>
         </a>
       </div>
 
-      <div class="grid-right-8">
-        <a href="TwinFantasy" class="item-link">
-          <img src="images/exhibitions/TF_0.jpg" alt="Twin Fantasy, SNU51, 2023">
-          <p class="caption-right">Twin Fantasy, SNU51, 2023</p>
-        </a>
-      </div>
+
+
     </div>
   </main>
+
+
+
 </body>
 </html>

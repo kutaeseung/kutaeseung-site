@@ -472,8 +472,23 @@ main.info-main {
   }
 
 
+  /* 8-1. 헤더 내비게이션: "Ku Taeseung" 줄바꿈 후 나머지 링크 */
   .nav-text {
     white-space: normal;
+    display: block;
+  }
+
+  .nav-name {
+    display: block;
+  }
+
+  .nav-sep {
+    display: none;
+  }
+
+  .nav-links {
+    display: block;
+    margin-top: 6px;
   }
 
 
@@ -510,5 +525,49 @@ main.info-main {
 
   .caption-right {
     white-space: normal;
+  }
+
+
+  /* 8-2. Selected Works: 한 작품씩 세로로, 가운데 정렬 (순서는 그대로 유지) */
+  .works-wall {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .work-frame {
+    align-items: center;
+  }
+
+
+  /* 8-3. Texts 리더 뷰: 목차를 오른쪽, 본문을 왼쪽에 배치
+     (오른손 엄지 스크롤을 고려 - 엄지가 닿는 우측 여백에 목차를,
+     가려지지 않는 좌측에 본문을 두는 책 디자인 원칙 참조) */
+  .reader-container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .reader-content {
+    order: 1;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .reader-nav {
+    order: 2;
+    flex: 0 0 100px;
+    width: 100px;
+    position: sticky;
+    top: 20px;
+    gap: 16px;
+  }
+
+  .reader-link {
+    font-size: 12px;
+    line-height: 1.35;
+    word-break: keep-all;
   }
 }
