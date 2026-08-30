@@ -30,7 +30,8 @@
     justify-content: space-between;
     align-items: center;
   }
-  .header-title { font-size: 15px; font-weight: 600; }
+  .header-title { font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 10px; }
+  .save-status { font-size: 11px; color: #16794f; font-weight: normal; }
   .main-layout { display: flex; flex: 1; height: calc(100vh - 55px); }
   .edit-panel {
     width: 500px;
@@ -42,7 +43,7 @@
     flex-direction: column;
     gap: 20px;
   }
-  .nav-tabs { display: flex; gap: 6px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
+  .nav-tabs { display: flex; gap: 6px; border-bottom: 1px solid #ddd; padding-bottom: 10px; flex-wrap: wrap; }
   .tab-btn { background: none; border: none; font-size: 13px; font-weight: 500; padding: 6px 12px; cursor: pointer; border-radius: 4px; }
   .tab-btn.active { background-color: #000000; color: #ffffff; }
   .section-box { background: #ffffff; border: 1px solid var(--border-color); border-radius: 6px; padding: 16px; display: flex; flex-direction: column; gap: 12px; }
@@ -66,6 +67,8 @@
   .btn-cancel:hover { background: #666666; }
   .btn-download { background: var(--primary-blue); color: #ffffff; border: none; padding: 9px 16px; font-size: 13px; font-weight: 600; border-radius: 4px; cursor: pointer; display: flex; align-items: center; gap: 6px; }
   .btn-download:hover { background: #0052a3; }
+  .btn-reset { background: #ffffff; border: 1px solid #cccccc; color: #888888; padding: 9px 14px; font-size: 12px; border-radius: 4px; cursor: pointer; }
+  .btn-reset:hover { background: #f5f5f5; }
   .item-list { display: flex; flex-direction: column; gap: 8px; margin-top: 10px; }
   .item-card { background: #fafafa; border: 1px solid #e5e5e5; padding: 10px 12px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; gap: 10px; }
   .item-card.editing { border-color: var(--edit-orange); background: #fffbeb; }
@@ -86,23 +89,26 @@
 <body>
 
 <header>
-  <div class="header-title">Ku Taeseung - Studio Manager</div>
-  <button class="btn-download" onclick="downloadCurrentFile()">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-    <span id="btn-download-text">exhibitions.html</span>
-  </button>
+  <div class="header-title">Ku Taeseung - Studio Manager <span class="save-status" id="save-status"></span></div>
+  <div style="display:flex; gap:8px;">
+    <button class="btn-reset" onclick="resetAllData()">전체 초기화</button>
+    <button class="btn-download" onclick="downloadCurrentFile()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+      <span id="btn-download-text">exhibitions-projects.html</span>
+    </button>
+  </div>
 </header>
 
 <div class="main-layout">
 
   <div class="edit-panel">
     <div class="nav-tabs">
-      <button class="tab-btn active" onclick="setMode('exhibitions')">Exhibitions</button>
+      <button class="tab-btn active" onclick="setMode('exhibitions')">Exhibitions &amp; Projects</button>
       <button class="tab-btn" onclick="setMode('works')">Selected Works</button>
       <button class="tab-btn" onclick="setMode('texts')">Texts (JSON 관리)</button>
     </div>
 
-    <!-- 1. Exhibitions -->
+    <!-- 1. Exhibitions & Projects -->
     <div id="panel-exhibitions" class="section-box">
       <div class="section-title"><span id="exhibitions-form-title">새 전시 추가하기</span><span id="exhibitions-edit-badge" style="display:none; font-size:11px; color:#d97706; font-weight:normal;">(수정 모드)</span></div>
 
@@ -234,7 +240,7 @@
   </div>
 
   <div class="preview-panel">
-    <div class="preview-bar" id="preview-bar-title">exhibitions.html</div>
+    <div class="preview-bar" id="preview-bar-title">exhibitions-projects.html</div>
     <iframe id="preview-frame"></iframe>
   </div>
 
@@ -246,7 +252,9 @@ let editingWorkIndex = -1;
 let editingTextIndex = -1;
 let editingExhibitionIndex = -1;
 
-/* ---------- 데이터 ---------- */
+const STORAGE_KEY = 'ku-studio-manager-data-v1';
+
+/* ---------- 기본 데이터 (localStorage에 저장된 게 없을 때만 사용) ---------- */
 let worksData = [
   { file: "colorchecker.jpg", h: 60, title: "Colorchecker", year: "2024", material: "", size: "" },
   { file: "duet1.jpg", h: 55, title: "Duet 1", year: "2024", material: "", size: "" },
@@ -277,6 +285,38 @@ let exhibitionsData = [
   }
 ];
 
+/* ---------- 자동 저장 / 불러오기 (localStorage) ---------- */
+function saveState() {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify({ worksData, textsData, exhibitionsData }));
+    const status = document.getElementById('save-status');
+    if (status) {
+      status.innerText = '저장됨 ' + new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
+    }
+  } catch (err) {
+    console.error('저장 실패:', err);
+  }
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return;
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed.worksData)) worksData = parsed.worksData;
+    if (Array.isArray(parsed.textsData)) textsData = parsed.textsData;
+    if (Array.isArray(parsed.exhibitionsData)) exhibitionsData = parsed.exhibitionsData;
+  } catch (err) {
+    console.error('불러오기 실패:', err);
+  }
+}
+
+function resetAllData() {
+  if (!confirm('이 브라우저에 저장된 모든 작업 내용을 지우고 기본값으로 되돌립니다. 계속할까요?')) return;
+  localStorage.removeItem(STORAGE_KEY);
+  location.reload();
+}
+
 /* ---------- 탭 전환 ---------- */
 function setMode(mode) {
   currentMode = mode;
@@ -286,7 +326,7 @@ function setMode(mode) {
   document.getElementById('panel-works').style.display = mode === 'works' ? 'block' : 'none';
   document.getElementById('panel-texts').style.display = mode === 'texts' ? 'block' : 'none';
 
-  const downloadLabels = { exhibitions: 'exhibitions.html', works: 'works.html', texts: 'texts-data.json' };
+  const downloadLabels = { exhibitions: 'exhibitions-projects.html', works: 'works.html', texts: 'texts-data.json' };
   document.getElementById('btn-download-text').innerText = downloadLabels[mode];
   document.getElementById('preview-bar-title').innerText = mode === 'texts' ? 'texts-data.json (미리보기: texts.html)' : downloadLabels[mode];
 
@@ -495,7 +535,7 @@ const ADOBE_KIT_SCRIPT = `<script>
 
 function navHtml(active) {
   const cls = (name) => name === active ? 'nav-link active' : 'nav-link';
-  return `<nav class="nav-text"><a href="index.html" class="${cls('home')}">Ku Taeseung</a> / <a href="exhibitions.html" class="${cls('exhibitions')}">Exhibitions</a> / <a href="works.html" class="${cls('works')}">Selected Works</a> / <a href="texts.html" class="${cls('texts')}">Texts</a> / <a href="info.html" class="${cls('info')}">Info</a> / <a href="etc.html" class="${cls('etc')}">etc...</a></nav>`;
+  return `<nav class="nav-text"><span class="nav-name"><a href="index.html" class="${cls('home')}">Ku Taeseung</a></span><span class="nav-sep"> / </span><span class="nav-links"><a href="exhibitions-projects.html" class="${cls('exhibitions')}">Exhibitions &amp; Projects</a> / <a href="works.html" class="${cls('works')}">Selected Works</a> / <a href="texts.html" class="${cls('texts')}">Texts</a> / <a href="info.html" class="${cls('info')}">Info</a> / <a href="etc.html" class="${cls('etc')}">etc...</a></span></nav>`;
 }
 
 /* ---------- works.html 생성 ---------- */
@@ -520,14 +560,14 @@ function generateWorksHtml() {
     .work-frame { display: inline-flex; flex-direction: column; align-items: flex-start; flex-shrink: 0; height: calc(var(--h, 60) * 2.8px); cursor: pointer; }
     .work-frame img { height: 100% !important; width: auto !important; max-width: none !important; display: block; object-fit: contain; transition: opacity 0.2s ease; }
     .work-frame:hover img { opacity: 0.85; }
-    .work-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: rgba(255,255,255,0.98); z-index: 99999; cursor: pointer; padding: 40px; box-sizing: border-box; }
+    .work-modal { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background-color: #ffffff; z-index: 99999; cursor: pointer; padding: 40px; box-sizing: border-box; }
     .work-modal.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
     .modal-box { display: flex; flex-direction: column; align-items: center; justify-content: center; max-width: 90vw; max-height: 90vh; cursor: default; }
     .modal-box img { max-width: 82vw; max-height: 75vh; width: auto !important; height: auto !important; object-fit: contain; display: block; cursor: pointer; }
     .modal-caption { margin-top: 20px; text-align: center; font-size: 15px; font-family: inherit; color: #000000; line-height: 1.5; }
     @media (max-width: 768px) {
-      .works-wall { gap: 16px; row-gap: 40px; }
-      .work-frame { height: calc(var(--h, 60) * 1.6px); }
+      .works-wall { flex-direction: column; align-items: center; gap: 16px; row-gap: 40px; }
+      .work-frame { width: 100%; align-items: center; height: calc(var(--h, 60) * 1.6px); }
     }
   </style>
 </head>
@@ -574,7 +614,7 @@ function generateWorksHtml() {
 </html>`;
 }
 
-/* ---------- exhibitions.html 생성 (목록 페이지) ---------- */
+/* ---------- exhibitions-projects.html 생성 (목록 페이지) ---------- */
 function generateExhibitionsHtml() {
   const items = exhibitionsData.map(e => `
       <div class="grid-right-8">
@@ -589,7 +629,7 @@ function generateExhibitionsHtml() {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ku Taeseung - Exhibitions</title>
+  <title>Ku Taeseung - Exhibitions &amp; Projects</title>
   ${ADOBE_KIT_SCRIPT}
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">
@@ -738,6 +778,8 @@ function updateUI() {
   doc.open();
   doc.write(generatePreviewDocument(currentMode));
   doc.close();
+
+  saveState();
 }
 
 /* ---------- 다운로드 ---------- */
@@ -745,7 +787,7 @@ function downloadCurrentFile() {
   let content, filename;
   if (currentMode === 'works') { content = generateWorksHtml(); filename = 'works.html'; }
   else if (currentMode === 'texts') { content = generateTextsJson(); filename = 'texts-data.json'; }
-  else { content = generateExhibitionsHtml(); filename = 'exhibitions.html'; }
+  else { content = generateExhibitionsHtml(); filename = 'exhibitions-projects.html'; }
 
   const blob = new Blob([content], { type: currentMode === 'texts' ? 'application/json;charset=utf-8' : 'text/html;charset=utf-8' });
   const a = document.createElement('a');
@@ -755,7 +797,10 @@ function downloadCurrentFile() {
   URL.revokeObjectURL(a.href);
 }
 
-window.onload = function() { updateUI(); };
+window.onload = function() {
+  loadState();
+  updateUI();
+};
 </script>
 </body>
 </html>
