@@ -47,6 +47,13 @@
       max-width: none !important;
       display: block;
       object-fit: contain;
+      transition: opacity 0.2s ease;
+    }
+
+
+
+    .work-frame:hover img {
+      opacity: 0.85;
     }
 
 
@@ -132,108 +139,90 @@
 <body>
 
 
-
   <header>
     <nav class="nav-text"><span class="nav-name"><a href="index.html" class="nav-link">Ku Taeseung</a></span><span class="nav-sep"> / </span><span class="nav-links"><a href="exhibitions-projects.html" class="nav-link">Exhibitions &amp; Projects</a> / <a href="works.html" class="nav-link active">Selected Works</a> / <a href="texts.html" class="nav-link">Texts</a> / <a href="info.html" class="nav-link">Info</a> / <a href="etc.html" class="nav-link">etc...</a></span></nav>
   </header>
-
 
 
   <main>
     <div class="works-wall" id="works-wall">
 
 
-
-      <!-- 1. colorchecker.jpg -->
       <div class="work-frame" style="--h: 60;" data-title="Colorchecker" data-year="2024" data-material="" data-size="">
         <img src="images/selected-works/colorchecker.jpg" alt="Colorchecker">
       </div>
 
 
 
-      <!-- 2. duet1.jpg -->
       <div class="work-frame" style="--h: 55;" data-title="Duet 1" data-year="2024" data-material="" data-size="">
         <img src="images/selected-works/duet1.jpg" alt="Duet 1">
       </div>
 
 
 
-      <!-- 3. duet2.jpg -->
       <div class="work-frame" style="--h: 55;" data-title="Duet 2" data-year="2024" data-material="" data-size="">
         <img src="images/selected-works/duet2.jpg" alt="Duet 2">
       </div>
 
 
 
-      <!-- 4. frank.jpg -->
       <div class="work-frame" style="--h: 65;" data-title="Frank" data-year="2024" data-material="" data-size="">
         <img src="images/selected-works/frank.jpg" alt="Frank">
       </div>
 
 
 
-      <!-- 5. greenwood.jpg -->
       <div class="work-frame" style="--h: 70;" data-title="Greenwood" data-year="2024" data-material="" data-size="">
         <img src="images/selected-works/greenwood.jpg" alt="Greenwood">
       </div>
 
 
 
-      <!-- 6. middle eye(I).png -->
       <div class="work-frame" style="--h: 50;" data-title="Middle Eye (I)" data-year="2023" data-material="" data-size="">
         <img src="images/selected-works/middle eye(I).png" alt="Middle Eye (I)">
       </div>
 
 
 
-      <!-- 7. optogram.png -->
       <div class="work-frame" style="--h: 45;" data-title="Optogram" data-year="2023" data-material="" data-size="">
         <img src="images/selected-works/optogram.png" alt="Optogram">
       </div>
 
 
 
-      <!-- 8. optography.jpg -->
       <div class="work-frame" style="--h: 45;" data-title="Optography" data-year="2023" data-material="" data-size="">
         <img src="images/selected-works/optography.jpg" alt="Optography">
       </div>
 
 
 
-      <!-- 9. strokes.png -->
       <div class="work-frame" style="--h: 60;" data-title="Strokes" data-year="2024" data-material="" data-size="">
         <img src="images/selected-works/strokes.png" alt="Strokes">
       </div>
 
 
 
-      <!-- 10. sunpainting.png -->
       <div class="work-frame" style="--h: 65;" data-title="Sun Painting" data-year="2024" data-material="" data-size="">
         <img src="images/selected-works/sunpainting.png" alt="Sun Painting">
       </div>
 
 
 
-      <!-- 11. woodnew.png -->
       <div class="work-frame" style="--h: 58;" data-title="Wood New" data-year="2024" data-material="" data-size="">
         <img src="images/selected-works/woodnew.png" alt="Wood New">
       </div>
 
 
 
-      <!-- 12. woodnew2.png -->
       <div class="work-frame" style="--h: 58;" data-title="Wood New 2" data-year="2024" data-material="" data-size="">
         <img src="images/selected-works/woodnew2.png" alt="Wood New 2">
       </div>
-
 
 
     </div>
   </main>
 
 
-
-  <!-- 라이트박스 모달 -->
   <div id="work-modal" class="work-modal" onclick="closeModal()">
     <div class="modal-box" onclick="event.stopPropagation()">
       <img id="modal-img" src="" alt="" onclick="closeModal()">
@@ -242,16 +231,12 @@
   </div>
 
 
-
   <script>
-    // 작품 프레임 클릭 처리: onclick 문자열 조립 대신 이벤트 리스너 1개로 위임
     document.getElementById('works-wall').addEventListener('click', function(e) {
       const frame = e.target.closest('.work-frame');
       if (!frame) return;
       openModal(frame, frame.dataset.title, frame.dataset.year, frame.dataset.material, frame.dataset.size);
     });
-
-
 
     function openModal(element, title, year, material, size) {
       const img = element.querySelector('img');
@@ -259,30 +244,19 @@
       const modalImg = document.getElementById('modal-img');
       const modalCaption = document.getElementById('modal-caption');
 
-
-
       modalImg.src = img.src;
 
-
-
-      // 캡션: 제목, 제작연도, 재료, 크기(세로×가로cm) - 낫표(〈〉) 없이 순수 텍스트 나열
       const parts = [];
       if (title) parts.push(title);
       if (year) parts.push(year);
       if (material) parts.push(material);
       if (size) parts.push(size);
 
-
-
       modalCaption.textContent = parts.join(', ');
-
-
 
       modal.classList.add('active');
       document.body.style.overflow = 'hidden';
     }
-
-
 
     function closeModal() {
       const modal = document.getElementById('work-modal');
@@ -290,13 +264,10 @@
       document.body.style.overflow = '';
     }
 
-
-
     document.addEventListener('keydown', function(e) {
       if (e.key === 'Escape') closeModal();
     });
   </script>
-
 
 
 </body>
