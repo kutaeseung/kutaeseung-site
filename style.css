@@ -391,15 +391,6 @@ main.info-main {
 
 
 
-.item-link img {
-  transition: opacity 0.2s ease;
-}
-
-
-
-.item-link:hover img {
-  opacity: 0.85;
-}
 
 
 
