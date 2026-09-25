@@ -160,9 +160,7 @@ main {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  position: sticky;
-  top: 40px;
-  align-self: flex-start;
+  align-self: start;
 }
 
 
@@ -555,8 +553,6 @@ main.info-main {
     order: 2;
     flex: 0 0 100px;
     width: 100px;
-    position: sticky;
-    top: 20px;
     gap: 16px;
   }
 
