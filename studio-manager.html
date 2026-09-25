@@ -5,63 +5,99 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Ku Taeseung - Studio Manager</title>
 <style>
-:root{--bg-panel:#fcfcfc;--border-color:#e0e0e0;--primary-blue:#0066cc;--edit-orange:#d97706;--connected-green:#0a8a3f;}
+:root{--bg-panel:#fcfcfc;--border-color:#e0e0e0;--primary-blue:#0066cc;--edit-orange:#d97706;--connected-green:#0a8a3f;--danger:#c00;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Apple SD Gothic Neo",sans-serif;font-size:13px;background-color:#f0f0f2;color:#111;height:100vh;display:flex;flex-direction:column;overflow:hidden;}
-header{background:#fff;border-bottom:1px solid var(--border-color);padding:12px 24px;display:flex;justify-content:space-between;align-items:center;}
-.header-title{font-size:15px;font-weight:600;}
-.header-right{display:flex;align-items:center;gap:10px;}
-.folder-status{font-size:12px;color:#999;}
+header{background:#fff;border-bottom:1px solid var(--border-color);padding:10px 24px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+.header-title{font-size:15px;font-weight:600;white-space:nowrap;}
+.header-right{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}
+.folder-status{font-size:12px;color:#999;white-space:nowrap;}
 .folder-status.connected{color:var(--connected-green);font-weight:600;}
-.btn-folder{background:#fff;color:#111;border:1px solid #ccc;padding:8px 14px;font-size:13px;font-weight:500;border-radius:4px;cursor:pointer;}
-.btn-folder:hover{background:#f5f5f5;}
+.draft-status{font-size:11px;color:#bbb;white-space:nowrap;}
+.btn{background:#fff;color:#111;border:1px solid #ccc;padding:8px 14px;font-size:13px;font-weight:500;border-radius:4px;cursor:pointer;white-space:nowrap;}
+.btn:hover{background:#f5f5f5;}
+.btn:disabled{opacity:.4;cursor:not-allowed;}
 .btn-folder.connected{border-color:var(--connected-green);color:var(--connected-green);}
-.main-layout{display:flex;flex:1;height:calc(100vh - 55px);}
-.edit-panel{width:520px;background:var(--bg-panel);border-right:1px solid var(--border-color);padding:24px;overflow-y:auto;display:flex;flex-direction:column;gap:20px;}
+.btn-save{background:#000;color:#fff;border:none;padding:9px 18px;font-size:13px;font-weight:600;border-radius:4px;cursor:pointer;display:flex;align-items:center;gap:6px;}
+.btn-save:hover{background:#333;}
+.btn-save:disabled{background:#aaa;cursor:not-allowed;}
+.btn-undo{color:#555;}
+.main-layout{display:flex;flex:1;height:calc(100vh - 57px);overflow:hidden;}
+.edit-panel{width:560px;background:var(--bg-panel);border-right:1px solid var(--border-color);padding:20px 24px;overflow-y:auto;display:flex;flex-direction:column;gap:18px;}
 .nav-tabs{display:flex;gap:6px;border-bottom:1px solid #ddd;padding-bottom:10px;}
-.tab-btn{background:none;border:none;font-size:13px;font-weight:500;padding:6px 12px;cursor:pointer;border-radius:4px;}
+.tab-btn{background:none;border:none;font-size:13px;font-weight:500;padding:7px 14px;cursor:pointer;border-radius:4px;color:#555;}
 .tab-btn.active{background-color:#000;color:#fff;}
+.tab-btn:hover:not(.active){background:#eee;}
 .section-box{background:#fff;border:1px solid var(--border-color);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:12px;}
-.section-title{font-size:13px;font-weight:600;margin-bottom:4px;display:flex;justify-content:space-between;align-items:center;}
+.section-title{font-size:13px;font-weight:600;margin-bottom:2px;display:flex;justify-content:space-between;align-items:center;}
+.edit-badge{font-size:11px;color:var(--edit-orange);font-weight:normal;}
 .form-group{display:flex;flex-direction:column;gap:4px;}
 .form-group label{font-size:12px;color:#666;}
-input,textarea{font-family:inherit;font-size:13px;padding:8px 10px;border:1px solid #ccc;border-radius:4px;outline:none;}
+.form-hint{font-size:11px;color:#999;margin-top:-2px;}
+input[type=text],input[type=number],input[type=email],textarea{font-family:inherit;font-size:13px;padding:8px 10px;border:1px solid #ccc;border-radius:4px;outline:none;width:100%;}
 input:focus,textarea:focus{border-color:#000;}
-textarea{resize:vertical;min-height:70px;line-height:1.5;}
+textarea{resize:vertical;min-height:60px;line-height:1.5;}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .btn-action{background:#000;color:#fff;border:none;padding:10px;font-size:13px;font-weight:500;border-radius:4px;cursor:pointer;}
 .btn-action:hover{background:#333;}
+.btn-action:disabled{background:#aaa;cursor:not-allowed;}
 .btn-cancel{background:#888;color:#fff;border:none;padding:10px;font-size:13px;font-weight:500;border-radius:4px;cursor:pointer;}
 .btn-cancel:hover{background:#666;}
-.btn-download{background:var(--primary-blue);color:#fff;border:none;padding:9px 16px;font-size:13px;font-weight:600;border-radius:4px;cursor:pointer;display:flex;align-items:center;gap:6px;}
-.btn-download:hover{background:#0052a3;}
-.item-list{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
-.item-card{background:#fafafa;border:1px solid #e5e5e5;padding:10px 12px;border-radius:4px;display:flex;justify-content:space-between;align-items:center;font-size:12px;gap:10px;}
+.item-list{display:flex;flex-direction:column;gap:8px;margin-top:6px;}
+.item-card{background:#fafafa;border:1px solid #e5e5e5;padding:8px 10px;border-radius:4px;display:flex;align-items:center;gap:10px;font-size:12px;cursor:grab;}
 .item-card.editing{border-color:var(--edit-orange);background:#fffbeb;}
-.item-info{flex:1;word-break:break-all;}
-.item-controls{display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
-.btn-reorder{background:#eee;border:1px solid #ccc;padding:3px 8px;border-radius:3px;cursor:pointer;font-size:11px;}
-.btn-reorder:hover{background:#ddd;}
-.btn-edit{background:#fff;border:1px solid #ccc;padding:3px 8px;border-radius:3px;cursor:pointer;font-size:11px;color:#0066cc;font-weight:500;}
-.btn-edit:hover{background:#f0f7ff;}
-.btn-detail{background:#fff;border:1px solid #ccc;padding:3px 8px;border-radius:3px;cursor:pointer;font-size:11px;color:#d97706;font-weight:500;}
-.btn-detail:hover{background:#fff7ed;}
-.btn-delete{color:#c00;background:none;border:none;cursor:pointer;font-size:12px;margin-left:4px;}
+.item-card.drag-over{border-color:#000;border-style:dashed;}
+.item-thumb{width:40px;height:40px;flex-shrink:0;border-radius:3px;background:#eee repeating-linear-gradient(45deg,#eee,#eee 4px,#e2e2e2 4px,#e2e2e2 8px);object-fit:cover;display:block;}
+.item-info{flex:1;word-break:break-word;min-width:0;}
+.item-info .size-bar-track{height:4px;background:#eee;border-radius:2px;margin-top:4px;overflow:hidden;}
+.item-info .size-bar-fill{height:100%;background:#999;}
+.item-controls{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.btn-mini{background:#fff;border:1px solid #ccc;padding:4px 8px;border-radius:3px;cursor:pointer;font-size:11px;}
+.btn-mini:hover{background:#f0f0f0;}
+.btn-mini.edit{color:#0066cc;}
+.btn-mini.detail{color:#d97706;}
+.btn-mini.delete{color:var(--danger);border-color:#eecccc;}
 .hint{font-size:11px;color:#999;}
-.preview-panel{flex:1;background:#fff;display:flex;flex-direction:column;}
-.preview-bar{background:#f8f8fa;border-bottom:1px solid var(--border-color);padding:8px 16px;font-size:12px;color:#777;}
+.dropzone{border:2px dashed #ccc;border-radius:6px;padding:14px;text-align:center;font-size:12px;color:#888;cursor:pointer;position:relative;transition:.15s;}
+.dropzone:hover{border-color:#999;background:#fafafa;}
+.dropzone.dragover{border-color:#000;background:#f5f5f5;color:#000;}
+.dropzone.disabled{opacity:.5;cursor:not-allowed;}
+.dropzone.has-image{padding:0;border-style:solid;overflow:hidden;}
+.dropzone.has-image img{width:100%;max-height:160px;object-fit:contain;display:block;background:#f5f5f5;}
+.dropzone .dz-label{padding:14px;}
+.dz-filename{font-size:11px;color:#666;padding:6px 8px;background:#f5f5f5;border-top:1px solid #eee;word-break:break-all;}
+.sub-list{display:flex;flex-direction:column;gap:8px;}
+.sub-item{background:#fafafa;border:1px solid #eee;border-radius:5px;padding:10px;display:flex;flex-direction:column;gap:6px;}
+.sub-item-head{display:flex;justify-content:space-between;align-items:center;font-size:11px;color:#999;}
+.photo-row{display:grid;grid-template-columns:16px 20px 64px 1fr auto;gap:10px;align-items:center;background:#fafafa;border:1px solid #eee;border-radius:5px;padding:8px;cursor:grab;}
+.photo-row.drag-over{border-color:#000;border-style:dashed;}
+.photo-row .photo-order{font-size:11px;color:#999;text-align:center;}
+.photo-row img{width:64px;height:64px;object-fit:cover;border-radius:3px;background:#eee;}
+.photo-row .photo-drop{width:64px;height:64px;border:2px dashed #ccc;border-radius:3px;display:flex;align-items:center;justify-content:center;font-size:10px;color:#999;text-align:center;cursor:pointer;}
+.btn-add-line{background:#fff;border:1px dashed #bbb;padding:8px;border-radius:4px;font-size:12px;color:#555;cursor:pointer;text-align:center;}
+.btn-add-line:hover{background:#f5f5f5;}
+.btn-x{background:none;border:none;color:#c00;font-size:16px;cursor:pointer;line-height:1;padding:2px 6px;}
+.preview-panel{flex:1;background:#fff;display:flex;flex-direction:column;min-width:0;}
+.preview-bar{background:#f8f8fa;border-bottom:1px solid var(--border-color);padding:8px 16px;font-size:12px;color:#777;display:flex;justify-content:space-between;}
 iframe{width:100%;flex:1;border:none;background:#fff;}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:#000;color:#fff;padding:12px 20px;border-radius:6px;font-size:13px;z-index:999;opacity:0;pointer-events:none;transition:opacity .25s;box-shadow:0 4px 16px rgba(0,0,0,.2);}
+.toast.show{opacity:1;}
+.banner{background:#fffbe6;border:1px solid #f0dca0;color:#7a5c00;padding:10px 14px;border-radius:5px;font-size:12px;line-height:1.5;}
+.drag-handle{color:#bbb;font-size:14px;cursor:grab;flex-shrink:0;}
 </style>
 </head>
 <body>
 <header>
 <div class="header-title">Ku Taeseung - Studio Manager</div>
 <div class="header-right">
+<span class="draft-status" id="draft-status"></span>
 <span class="folder-status" id="folder-status">폴더 연결 안 됨</span>
-<button class="btn-folder" id="btn-folder" onclick="connectFolder()">폴더 연결</button>
-<button class="btn-download" onclick="downloadCurrentFile()">
+<button class="btn btn-folder" id="btn-folder" onclick="connectFolder()">폴더 연결</button>
+<button class="btn" id="btn-reload" style="display:none;" onclick="reloadFromFolder()">다시 불러오기</button>
+<button class="btn btn-undo" id="btn-undo" onclick="undo()" disabled>↩ 실행 취소</button>
+<button class="btn-save" id="btn-save-all" onclick="saveAll()">
 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-<span id="btn-download-text">works.html 저장</span>
+전체 저장
 </button>
 </div>
 </header>
@@ -69,114 +105,260 @@ iframe{width:100%;flex:1;border:none;background:#fff;}
 <div class="main-layout">
 <div class="edit-panel">
 <div class="nav-tabs">
-<button class="tab-btn active" onclick="setMode('works')">Selected Works</button>
-<button class="tab-btn" onclick="setMode('texts')">Texts (JSON)</button>
-<button class="tab-btn" onclick="setMode('exhibitions')">Exhibitions</button>
+<button class="tab-btn active" data-tab="works" onclick="setMode('works')">작품</button>
+<button class="tab-btn" data-tab="texts" onclick="setMode('texts')">글</button>
+<button class="tab-btn" data-tab="exhibitions" onclick="setMode('exhibitions')">전시</button>
+<button class="tab-btn" data-tab="info" onclick="setMode('info')">소개</button>
 </div>
 
-<!-- 1. Selected Works -->
+<div class="banner" id="no-folder-banner">아직 폴더가 연결되지 않았어요. 먼저 <strong>폴더 연결</strong>을 눌러 웹사이트 폴더(이 관리 도구 파일이 들어있는 폴더)를 선택해주세요. 이미지 업로드와 저장은 폴더 연결 후에 가능합니다.</div>
+
+<!-- 1. Works -->
 <div id="panel-works" class="section-box">
-<div class="section-title"><span id="works-form-title">새 작품 추가하기</span><span id="works-edit-badge" style="display:none;font-size:11px;color:#d97706;font-weight:normal;">(수정 모드)</span></div>
-<div class="row">
-<div class="form-group"><label>파일명 (images/selected-works/ 안)</label><input type="text" id="w-file" placeholder="frank.jpg"></div>
-<div class="form-group"><label>세로 높이 (cm)</label><input type="number" id="w-h" placeholder="65"></div>
+<div class="section-title"><span id="works-form-title">새 작품 추가하기</span><span id="works-edit-badge" class="edit-badge" style="display:none;">(수정 중)</span></div>
+
+<div class="form-group">
+<label>작품 이미지</label>
+<div class="dropzone" id="w-dropzone" onclick="triggerFileInput('w-file-input')">
+<div class="dz-label">이미지를 여기에 끌어다 놓거나 클릭해서 선택하세요</div>
+<input type="file" id="w-file-input" accept="image/*" style="display:none;" onchange="onWorkImagePicked(this.files)">
 </div>
+</div>
+
 <div class="row">
 <div class="form-group"><label>제목</label><input type="text" id="w-title" placeholder="Frank"></div>
 <div class="form-group"><label>제작 연도</label><input type="text" id="w-year" placeholder="2024"></div>
 </div>
 <div class="row">
+<div class="form-group">
+<label>세로 높이 (cm) — 실제 작품의 세로 크기</label>
+<input type="number" id="w-h" placeholder="65" oninput="updateSizePreview()">
+</div>
+<div class="form-group"><label>크기 표기 cm (선택, 예: 65x52cm)</label><input type="text" id="w-size" placeholder="65x52cm"></div>
+</div>
 <div class="form-group"><label>재료 (선택)</label><input type="text" id="w-material"></div>
-<div class="form-group"><label>크기 cm (선택)</label><input type="text" id="w-size" placeholder="65x52cm"></div>
+<div class="form-group">
+<label>다른 작품 대비 상대적 크기</label>
+<div class="size-bar-track" style="height:6px;"><div class="size-bar-fill" id="w-size-preview" style="width:0%;"></div></div>
 </div>
 <div style="display:flex;gap:8px;">
 <button id="btn-save-work" class="btn-action" style="flex:1;" onclick="saveWork()">+ 목록에 작품 추가</button>
 <button id="btn-cancel-work" class="btn-cancel" style="display:none;" onclick="cancelEditWork()">취소</button>
 </div>
-<div style="margin-top:16px;"><label><strong>등록된 작품 목록</strong> (수정/▲▼/삭제)</label><div class="item-list" id="works-list"></div></div>
+<div><label><strong>등록된 작품</strong> — 카드를 드래그하면 순서가 바뀝니다</label><div class="item-list" id="works-list"></div></div>
 </div>
 
 <!-- 2. Texts -->
 <div id="panel-texts" class="section-box" style="display:none;">
-<div class="section-title"><span id="texts-form-title">새 글 / 평론 추가하기</span><span id="texts-edit-badge" style="display:none;font-size:11px;color:#d97706;font-weight:normal;">(수정 모드)</span></div>
+<div class="section-title"><span id="texts-form-title">새 글 / 평론 추가하기</span><span id="texts-edit-badge" class="edit-badge" style="display:none;">(수정 중)</span></div>
 <div class="row">
 <div class="form-group"><label>저자 / 필자</label><input type="text" id="t-author"></div>
 <div class="form-group"><label>작성 연도</label><input type="text" id="t-year" placeholder="2025"></div>
 </div>
 <div class="form-group"><label>글 제목</label><input type="text" id="t-title" placeholder="Before This River Becomes an Ocean"></div>
-<div class="form-group"><label>본문 내용 (엔터 2번으로 문단 구분)</label><textarea id="t-content" style="min-height:120px;"></textarea></div>
-<div class="form-group"><label>각주 (선택, 엔터 1번으로 구분)</label><textarea id="t-footnotes" style="min-height:50px;"></textarea></div>
+
+<div class="form-group">
+<label>본문 (문단 단위로 나눠서 작성)</label>
+<div class="sub-list" id="t-content-list"></div>
+<div class="btn-add-line" onclick="addContentParagraph()">+ 문단 추가</div>
+</div>
+
+<div class="form-group">
+<label>각주 (선택)</label>
+<div class="sub-list" id="t-footnotes-list"></div>
+<div class="btn-add-line" onclick="addFootnote()">+ 각주 추가</div>
+</div>
+
 <div style="display:flex;gap:8px;">
 <button id="btn-save-text" class="btn-action" style="flex:1;" onclick="saveText()">+ 목록에 글 추가</button>
 <button id="btn-cancel-text" class="btn-cancel" style="display:none;" onclick="cancelEditText()">취소</button>
 </div>
-<div style="margin-top:16px;"><label><strong>등록된 글 목록</strong></label><div class="item-list" id="texts-list"></div></div>
+<div><label><strong>등록된 글</strong></label><div class="item-list" id="texts-list"></div></div>
 </div>
 
 <!-- 3. Exhibitions -->
 <div id="panel-exhibitions" class="section-box" style="display:none;">
-<div class="section-title"><span id="exhibitions-form-title">새 전시 추가하기</span><span id="exhibitions-edit-badge" style="display:none;font-size:11px;color:#d97706;font-weight:normal;">(수정 모드)</span></div>
-<div class="form-group"><label>상세 HTML 파일명</label><input type="text" id="e-link" placeholder="Amator.html"></div>
-<div class="row">
-<div class="form-group"><label>목록용 대표 이미지 (images/exhibitions/)</label><input type="text" id="e-img" placeholder="Amator0.jpg"></div>
-<div class="form-group"><label>목록용 캡션</label><input type="text" id="e-caption" placeholder="Amator, Long Vacance, 2026"></div>
+<div class="section-title"><span id="exhibitions-form-title">새 전시 추가하기</span><span id="exhibitions-edit-badge" class="edit-badge" style="display:none;">(수정 중)</span></div>
+
+<div class="form-group">
+<label>목록용 대표 이미지</label>
+<div class="dropzone" id="e-dropzone" onclick="triggerFileInput('e-file-input')">
+<div class="dz-label">이미지를 여기에 끌어다 놓거나 클릭해서 선택하세요</div>
+<input type="file" id="e-file-input" accept="image/*" style="display:none;" onchange="onExhibitionThumbPicked(this.files)">
 </div>
-<hr style="border:none;border-top:1px solid #eee;margin:4px 0;">
-<div class="hint">아래는 상세페이지(전시 서문 + 설치 전경) 내용입니다. Amator.html과 같은 구조로 생성됩니다.</div>
-<div class="form-group"><label>전시 제목</label><input type="text" id="e-title" placeholder="Amator"></div>
+</div>
+<div class="form-group"><label>목록용 캡션</label><input type="text" id="e-caption" placeholder="아마토 Amator, Long Vacance, 2026"></div>
+<hr style="border:none;border-top:1px solid #eee;margin:2px 0;">
+<div class="hint">아래는 상세 페이지(전시 서문 + 설치 전경) 내용입니다.</div>
+<div class="form-group"><label>전시 제목</label><input type="text" id="e-title" placeholder="아마토 Amator" oninput="suggestExhibitionFilename()"></div>
 <div class="row">
 <div class="form-group"><label>장소 / 부제</label><input type="text" id="e-venue" placeholder="Long Vacance"></div>
 <div class="form-group"><label>기간</label><input type="text" id="e-daterange" placeholder="2026. 00. 00 – 00. 00"></div>
 </div>
-<div class="form-group"><label>서문 / 작가노트</label><textarea id="e-statement" style="min-height:90px;"></textarea></div>
-<div class="form-group"><label>설치 전경 사진 (한 줄에 "파일명 | 캡션", images/exhibitions/ 안)</label><textarea id="e-photos" placeholder="Amator01.jpg | Installation view 01&#10;Amator02.jpg | Installation view 02" style="min-height:110px;"></textarea></div>
+
+<div class="form-group">
+<label>서문 / 작가노트 (문단 단위로 나눠서 작성)</label>
+<div class="sub-list" id="e-statement-list"></div>
+<div class="btn-add-line" onclick="addStatementParagraph()">+ 문단 추가</div>
+</div>
+
+<div class="form-group">
+<label>설치 전경 사진 (사진을 드래그하면 순서가 바뀝니다)</label>
+<div class="sub-list" id="e-photos-list"></div>
+<div class="dropzone" id="e-photos-dropzone" onclick="triggerFileInput('e-photos-file-input')">
+<div class="dz-label">여러 장을 한 번에 끌어다 놓거나 클릭해서 선택하세요</div>
+<input type="file" id="e-photos-file-input" accept="image/*" multiple style="display:none;" onchange="onExhibitionPhotosPicked(this.files)">
+</div>
+</div>
+
+<div class="form-group">
+<label>상세 페이지 파일명 <span class="form-hint" style="display:inline;">(자동 생성, 필요하면 수정 가능)</span></label>
+<input type="text" id="e-link" placeholder="Amator.html">
+</div>
+
 <div style="display:flex;gap:8px;">
 <button id="btn-save-exhibition" class="btn-action" style="flex:1;" onclick="saveExhibition()">+ 목록에 전시 추가</button>
 <button id="btn-cancel-exhibition" class="btn-cancel" style="display:none;" onclick="cancelEditExhibition()">취소</button>
 </div>
-<div style="margin-top:16px;"><label><strong>등록된 전시 목록</strong> (수정 / 상세페이지 저장 / ▲▼ / 삭제)</label><div class="item-list" id="exhibitions-list"></div></div>
+<div><label><strong>등록된 전시</strong> — 카드를 드래그하면 순서가 바뀝니다</label><div class="item-list" id="exhibitions-list"></div></div>
+</div>
+
+<!-- 4. Info -->
+<div id="panel-info" class="section-box" style="display:none;">
+<div class="section-title">작가 소개 정보</div>
+<div class="form-group"><label>이름 (국문 + 영문, 한 줄)</label><input type="text" id="i-name" placeholder="구 태승 Ku Taeseung"></div>
+<div class="form-group">
+<label>소개 문구 (줄 단위로 작성)</label>
+<div class="sub-list" id="i-bio-list"></div>
+<div class="btn-add-line" onclick="addBioLine()">+ 줄 추가</div>
+</div>
+<div class="row">
+<div class="form-group"><label>이메일</label><input type="text" id="i-email" placeholder="taeseungku@gmail.com"></div>
+<div class="form-group"><label>전화번호</label><input type="text" id="i-phone" placeholder="+82)10-2746-7895"></div>
+</div>
+<div class="form-group">
+<label>CV 파일 (PDF)</label>
+<div class="dropzone" id="i-cv-dropzone" onclick="triggerFileInput('i-cv-file-input')">
+<div class="dz-label" id="i-cv-label">PDF를 여기에 끌어다 놓거나 클릭해서 선택하세요</div>
+<input type="file" id="i-cv-file-input" accept="application/pdf" style="display:none;" onchange="onCvPicked(this.files)">
+</div>
+</div>
+<button class="btn-action" onclick="saveInfo()">소개 정보 저장</button>
 </div>
 
 </div>
 
 <div class="preview-panel">
-<div class="preview-bar" id="preview-bar-title">works.html</div>
+<div class="preview-bar"><span id="preview-bar-title">works.html 미리보기</span><span id="preview-bar-hint" style="color:#bbb;">폴더 연결 후 이미지가 정상적으로 보입니다</span></div>
 <iframe id="preview-frame"></iframe>
 </div>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
+/* ===================== 상태 ===================== */
 let currentMode = 'works';
 let editingWorkIndex = -1;
 let editingTextIndex = -1;
 let editingExhibitionIndex = -1;
+let exhibitionFilenameTouched = false;
 let dirHandle = null;
 
-let worksData = [
-{file:'colorchecker.jpg',h:60,title:'Colorchecker',year:'2024',material:'',size:''},
-{file:'duet1.jpg',h:55,title:'Duet 1',year:'2024',material:'',size:''},
-{file:'duet2.jpg',h:55,title:'Duet 2',year:'2024',material:'',size:''},
-{file:'frank.jpg',h:65,title:'Frank',year:'2024',material:'',size:''},
-{file:'greenwood.jpg',h:70,title:'Greenwood',year:'2024',material:'',size:''},
-{file:'middle eyeI.png',h:50,title:'Middle Eye I',year:'2023',material:'',size:''},
-{file:'optogram.png',h:45,title:'Optogram',year:'2023',material:'',size:''},
-{file:'optography.jpg',h:45,title:'Optography',year:'2023',material:'',size:''},
-{file:'strokes.png',h:60,title:'Strokes',year:'2024',material:'',size:''},
-{file:'sunpainting.png',h:65,title:'Sun Painting',year:'2024',material:'',size:''},
-{file:'woodnew.png',h:58,title:'Wood New',year:'2024',material:'',size:''},
-{file:'woodnew2.png',h:58,title:'Wood New 2',year:'2024',material:'',size:''}
-];
-
+let worksData = [];
 let textsData = [];
+let exhibitionsData = [];
+let infoData = {nameLine:'', bioLines:[], email:'', phone:'', cvFile:''};
 
-let exhibitionsData = [
-{link:'Amator.html', img:'Amator0.jpg', caption:'Amator, Long Vacance, 2026',
- title:'Amator', venue:'Long Vacance', dateRange:'2026. 00. 00 – 00. 00',
- statement:'전시 서문 또는 작가노트 텍스트가 들어가는 공간입니다. 왼쪽 4칸의 폭에 맞춰 차분하게 정렬됩니다.',
- photos:[{file:'Amator0.jpg', caption:'Installation view 01'},{file:'Amator0.jpg', caption:'Installation view 02'}]}
-];
+let contentParagraphs = [];
+let footnoteLines = [];
+let statementParagraphs = [];
+let photoRows = [];
+let bioLines = [];
 
-/* --- 폴더 연결 (File System Access API, Chrome/Edge) --- */
+let undoStack = [];
+const UNDO_LIMIT = 30;
+const imageUrlCache = new Map();
+let autosaveTimer = null;
+
+/* ===================== 유틸 ===================== */
+function escapeHtml(s){
+return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function sanitizeFilename(name){
+const dot = name.lastIndexOf('.');
+const base = dot>-1 ? name.slice(0,dot) : name;
+const ext = dot>-1 ? name.slice(dot) : '';
+const cleanBase = base.normalize('NFKD').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'_');
+return (cleanBase || 'file') + ext.toLowerCase();
+}
+function slugifyForFilename(str){
+const ascii = (str||'').replace(/[^\x00-\x7F]/g,'').trim();
+const cleaned = ascii.replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'');
+return cleaned;
+}
+function deepClone(o){ return JSON.parse(JSON.stringify(o)); }
+function showToast(msg){
+const t = document.getElementById('toast');
+t.textContent = msg;
+t.classList.add('show');
+clearTimeout(t._hideTimer);
+t._hideTimer = setTimeout(()=>t.classList.remove('show'), 3200);
+}
+function triggerFileInput(id){
+if(!dirHandle){ alert('먼저 폴더를 연결해주세요.'); return; }
+document.getElementById(id).click();
+}
+function setupDropzone(zoneId, onFiles){
+const zone = document.getElementById(zoneId);
+if(!zone || zone._dndBound) return;
+zone._dndBound = true;
+zone.addEventListener('dragover', (e)=>{ e.preventDefault(); e.stopPropagation(); zone.classList.add('dragover'); });
+zone.addEventListener('dragleave', (e)=>{ e.preventDefault(); e.stopPropagation(); zone.classList.remove('dragover'); });
+zone.addEventListener('drop', (e)=>{
+e.preventDefault(); e.stopPropagation();
+zone.classList.remove('dragover');
+if(!dirHandle){ alert('먼저 폴더를 연결해주세요.'); return; }
+if(e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length){ onFiles(e.dataTransfer.files); }
+});
+}
+function setupAllDropzones(){
+setupDropzone('w-dropzone', (files)=>onWorkImagePicked(files));
+setupDropzone('e-dropzone', (files)=>onExhibitionThumbPicked(files));
+setupDropzone('e-photos-dropzone', (files)=>onExhibitionPhotosPicked(files));
+setupDropzone('i-cv-dropzone', (files)=>onCvPicked(files));
+}
+
+/* ===================== 실행 취소 ===================== */
+function pushUndo(){
+undoStack.push(deepClone({worksData,textsData,exhibitionsData,infoData}));
+if(undoStack.length>UNDO_LIMIT) undoStack.shift();
+document.getElementById('btn-undo').disabled = false;
+}
+function undo(){
+if(undoStack.length===0) return;
+const snap = undoStack.pop();
+worksData = snap.worksData; textsData = snap.textsData; exhibitionsData = snap.exhibitionsData; infoData = snap.infoData;
+document.getElementById('btn-undo').disabled = undoStack.length===0;
+cancelEditWork(); cancelEditText(); cancelEditExhibition(); fillInfoForm();
+updateUI();
+scheduleAutosave();
+showToast('마지막 변경을 되돌렸습니다.');
+}
+
+/* ===================== 자동 임시저장 (localStorage) ===================== */
+function draftKey(){ return 'studio-manager-draft::' + (dirHandle ? dirHandle.name : 'unconnected'); }
+function scheduleAutosave(){
+clearTimeout(autosaveTimer);
+autosaveTimer = setTimeout(()=>{
+try{
+localStorage.setItem(draftKey(), JSON.stringify({worksData,textsData,exhibitionsData,infoData, ts:Date.now()}));
+document.getElementById('draft-status').textContent = '임시 저장됨 · ' + new Date().toLocaleTimeString('ko-KR',{hour:'2-digit',minute:'2-digit'});
+}catch(e){ /* localStorage 사용 불가 시 조용히 무시 */ }
+}, 600);
+}
+
+/* ===================== 폴더 연결 & 파일 읽기/쓰기 ===================== */
 async function connectFolder(){
 if(!window.showDirectoryPicker){
 alert('이 브라우저는 폴더 연결을 지원하지 않습니다. Chrome 또는 Edge에서 열어주세요.');
@@ -188,458 +370,991 @@ document.getElementById('folder-status').innerText = '연결됨: ' + dirHandle.n
 document.getElementById('folder-status').classList.add('connected');
 document.getElementById('btn-folder').innerText = '폴더 재연결';
 document.getElementById('btn-folder').classList.add('connected');
-updateDownloadButtonLabel();
+document.getElementById('btn-reload').style.display = 'inline-block';
+document.getElementById('no-folder-banner').style.display = 'none';
+await loadDataFromFolder();
 }catch(err){
 if(err.name !== 'AbortError') alert('폴더 연결에 실패했습니다: ' + err.message);
 }
 }
-
+async function tryReadFile(filename){
+if(!dirHandle) return null;
+try{
+const fileHandle = await dirHandle.getFileHandle(filename);
+const file = await fileHandle.getFile();
+return {text: await file.text(), mtime: file.lastModified};
+}catch(err){
+return null;
+}
+}
 async function writeFileToFolder(filename, content){
 const fileHandle = await dirHandle.getFileHandle(filename, {create:true});
 const writable = await fileHandle.createWritable();
 await writable.write(content);
 await writable.close();
 }
-
-function updateDownloadButtonLabel(){
-const downloadLabels = {works:'works.html', texts:'texts-data.json', exhibitions:'exhibitions.html'};
-const suffix = dirHandle ? ' 저장' : ' 다운로드';
-document.getElementById('btn-download-text').innerText = downloadLabels[currentMode] + suffix;
+async function getSubDirHandle(subpath){
+const parts = subpath.split('/').filter(Boolean);
+let handle = dirHandle;
+for(const part of parts) handle = await handle.getDirectoryHandle(part, {create:true});
+return handle;
+}
+async function writeBinaryFile(subpath, filename, arrayBuffer){
+const subDir = await getSubDirHandle(subpath);
+const fileHandle = await subDir.getFileHandle(filename, {create:true});
+const writable = await fileHandle.createWritable();
+await writable.write(arrayBuffer);
+await writable.close();
+}
+async function getImageObjectUrl(subpath, filename){
+if(!dirHandle || !filename) return null;
+const key = subpath+'/'+filename;
+if(imageUrlCache.has(key)) return imageUrlCache.get(key);
+try{
+const subDir = await getSubDirHandle(subpath);
+const fileHandle = await subDir.getFileHandle(filename);
+const file = await fileHandle.getFile();
+const url = URL.createObjectURL(file);
+imageUrlCache.set(key, url);
+return url;
+}catch(err){
+return null;
+}
+}
+function invalidateImageCache(subpath, filename){
+imageUrlCache.delete(subpath+'/'+filename);
+}
+async function saveImageFile(subpath, file){
+const name = sanitizeFilename(file.name);
+const buf = await file.arrayBuffer();
+await writeBinaryFile(subpath, name, buf);
+invalidateImageCache(subpath, name);
+imageUrlCache.set(subpath+'/'+name, URL.createObjectURL(file));
+return name;
 }
 
-function downloadBlob(content, filename, mimeType){
-const blob = new Blob([content], {type: mimeType});
-const a = document.createElement('a');
-a.href = URL.createObjectURL(blob);
-a.download = filename;
-a.click();
-URL.revokeObjectURL(a.href);
+/* ===================== 폴더에서 기존 데이터 읽어오기 ===================== */
+function parseWorksHtml(html){
+const doc = new DOMParser().parseFromString(html, 'text/html');
+const frames = doc.querySelectorAll('.work-frame');
+const result = [];
+frames.forEach(frame=>{
+const img = frame.querySelector('img');
+const src = img ? (img.getAttribute('src')||'') : '';
+const file = src.split('/').pop();
+const styleAttr = frame.getAttribute('style') || '';
+const hMatch = styleAttr.match(/--h\s*:\s*([\d.]+)/);
+const h = hMatch ? hMatch[1] : '60';
+let title = frame.getAttribute('data-title');
+let year = frame.getAttribute('data-year');
+let material = frame.getAttribute('data-material');
+let size = frame.getAttribute('data-size');
+if(title === null){
+const onclickAttr = frame.getAttribute('onclick') || '';
+const m = onclickAttr.match(/openModal\(this,\s*'([^']*)',\s*'([^']*)',\s*'([^']*)',\s*'([^']*)'\)/);
+if(m){ title = m[1]; year = m[2]; material = m[3]; size = m[4]; }
+}
+title = title || (img ? img.getAttribute('alt') : '') || 'Untitled';
+year = year || ''; material = material || ''; size = size || '';
+if(file) result.push({file, h, title, year, material, size});
+});
+return result;
+}
+function parseExhibitionsListPage(html){
+const doc = new DOMParser().parseFromString(html, 'text/html');
+const links = doc.querySelectorAll('a.item-link');
+const result = [];
+links.forEach(a=>{
+const link = a.getAttribute('href') || '';
+const img = a.querySelector('img');
+const imgFile = (img ? (img.getAttribute('src')||'') : '').split('/').pop();
+const capEl = a.querySelector('.caption-right, .caption-left');
+const caption = capEl ? capEl.textContent.trim() : '';
+result.push({link, img: imgFile, caption});
+});
+return result;
+}
+function parseExhibitionDetail(html){
+const doc = new DOMParser().parseFromString(html, 'text/html');
+const titleEl = doc.querySelector('.exhibition-title');
+const title = titleEl ? titleEl.textContent.trim() : '';
+let venue = '', dateRange = '';
+const metaEl = doc.querySelector('.exhibition-meta');
+if(metaEl){
+const lines = metaEl.innerHTML.split(/<br\s*\/?>/i).map(l=>l.replace(/<[^>]+>/g,'').trim()).filter(l=>l);
+venue = lines[0] || ''; dateRange = lines[1] || '';
+}
+let statement = [];
+const stEl = doc.querySelector('.exhibition-statement');
+if(stEl){
+const clone = stEl.cloneNode(true);
+clone.querySelectorAll('br').forEach(br=>br.replaceWith('\n'));
+const raw = clone.textContent.split('\n').map(l=>l.trim());
+const joined = raw.join('\n').replace(/\n{2,}/g,'\n\n').trim();
+statement = joined.split('\n\n').map(p=>p.trim()).filter(p=>p);
+}
+const photos = [];
+const photoContainer = doc.querySelector('.archive-photos') || doc.querySelector('.grid-right-8');
+if(photoContainer){
+photoContainer.querySelectorAll('img').forEach(img=>{
+const file = (img.getAttribute('src')||'').split('/').pop();
+const parent = img.closest('div') || img.parentElement;
+const capEl = parent ? parent.querySelector('.caption-right, .caption-left, figcaption') : null;
+const caption = capEl ? capEl.textContent.trim() : '';
+if(file) photos.push({file, caption});
+});
+}
+return {title, venue, dateRange, statement, photos};
+}
+function parseInfoHtml(html){
+const doc = new DOMParser().parseFromString(html, 'text/html');
+const nameEl = doc.querySelector('.info-name');
+const nameLine = nameEl ? nameEl.textContent.trim() : '';
+let bio = [];
+const descEl = doc.querySelector('.info-desc');
+if(descEl){
+const clone = descEl.cloneNode(true);
+clone.querySelectorAll('br').forEach(br=>br.replaceWith('\n'));
+bio = clone.textContent.split('\n').map(l=>l.trim()).filter(l=>l);
+}
+const emailEl = doc.querySelector('.info-contact a[href^="mailto:"]');
+const email = emailEl ? emailEl.getAttribute('href').replace(/^mailto:/,'') : '';
+const phoneEl = doc.querySelector('.info-contact a[href^="tel:"]');
+const phone = phoneEl ? phoneEl.textContent.trim() : '';
+const cvEl = doc.querySelector('.info-cv a');
+const cvFile = cvEl ? (cvEl.getAttribute('href')||'').split('/').pop() : '';
+return {nameLine, bioLines:bio, email, phone, cvFile};
+}
+async function loadExhibitionsData(){
+const listFile = await tryReadFile('exhibitions-projects.html');
+if(listFile === null) return null;
+const listItems = parseExhibitionsListPage(listFile.text);
+const combined = [];
+for(const item of listItems){
+let detail = {title:'', venue:'', dateRange:'', statement:[], photos:[]};
+if(item.link){
+const detailFile = await tryReadFile(item.link);
+if(detailFile !== null) detail = parseExhibitionDetail(detailFile.text);
+}
+combined.push({
+link: item.link, img: item.img, caption: item.caption,
+title: detail.title, venue: detail.venue, dateRange: detail.dateRange,
+statement: detail.statement.length ? detail.statement : [],
+photos: detail.photos
+});
+}
+return combined;
+}
+async function loadDataFromFolder(){
+if(!dirHandle) return;
+const counts = {works:0, texts:0, exhibitions:0};
+let maxMtime = 0;
+
+const worksFile = await tryReadFile('works.html');
+if(worksFile !== null){ worksData = parseWorksHtml(worksFile.text); counts.works = worksData.length; maxMtime = Math.max(maxMtime, worksFile.mtime); }
+
+const textsFile = await tryReadFile('texts-data.json');
+if(textsFile !== null){
+try{
+const parsed = JSON.parse(textsFile.text);
+if(Array.isArray(parsed)){ textsData = parsed; counts.texts = textsData.length; }
+}catch(e){ console.error('texts-data.json 파싱 실패:', e); }
+maxMtime = Math.max(maxMtime, textsFile.mtime);
 }
 
+const exhibitions = await loadExhibitionsData();
+if(exhibitions !== null){ exhibitionsData = exhibitions; counts.exhibitions = exhibitionsData.length; }
+
+const infoFile = await tryReadFile('info.html');
+if(infoFile !== null){ infoData = parseInfoHtml(infoFile.text); maxMtime = Math.max(maxMtime, infoFile.mtime); }
+
+editingWorkIndex = -1; editingTextIndex = -1; editingExhibitionIndex = -1;
+undoStack = []; document.getElementById('btn-undo').disabled = true;
+
+await maybeRestoreDraft(maxMtime);
+
+fillInfoForm();
+updateUI();
+showToast('폴더에서 불러왔습니다 · 작품 '+counts.works+'개 · 글 '+counts.texts+'개 · 전시 '+counts.exhibitions+'개');
+}
+async function maybeRestoreDraft(folderMaxMtime){
+let raw;
+try{ raw = localStorage.getItem(draftKey()); }catch(e){ return; }
+if(!raw) return;
+let draft;
+try{ draft = JSON.parse(raw); }catch(e){ return; }
+if(!draft || !draft.ts) return;
+if(draft.ts > folderMaxMtime + 2000){
+const useDraft = confirm('저장하지 않은 임시 작업 내용이 남아있습니다 (폴더의 파일보다 최신).\n임시 작업 내용을 불러올까요?\n\n확인 = 임시 작업 내용 사용 / 취소 = 폴더의 파일 사용');
+if(useDraft){
+worksData = draft.worksData || worksData;
+textsData = draft.textsData || textsData;
+exhibitionsData = draft.exhibitionsData || exhibitionsData;
+infoData = draft.infoData || infoData;
+}
+}
+}
+async function reloadFromFolder(){
+if(!dirHandle){ alert('먼저 폴더를 연결하세요.'); return; }
+if(!confirm('저장하지 않은 편집 내용이 있다면 사라집니다. 폴더의 최신 파일로 다시 불러올까요?')) return;
+await loadDataFromFolder();
+}
+
+/* ===================== 탭 전환 ===================== */
 function setMode(mode){
 currentMode = mode;
-document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-event.target.classList.add('active');
-document.getElementById('panel-works').style.display = mode==='works'?'block':'none';
-document.getElementById('panel-texts').style.display = mode==='texts'?'block':'none';
-document.getElementById('panel-exhibitions').style.display = mode==='exhibitions'?'block':'none';
-updateDownloadButtonLabel();
-document.getElementById('preview-bar-title').innerText = mode==='texts'?'texts.html (JSON)':(mode+'.html');
+document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===mode));
+document.getElementById('panel-works').style.display = mode==='works'?'flex':'none';
+document.getElementById('panel-texts').style.display = mode==='texts'?'flex':'none';
+document.getElementById('panel-exhibitions').style.display = mode==='exhibitions'?'flex':'none';
+document.getElementById('panel-info').style.display = mode==='info'?'flex':'none';
+const titles = {works:'works.html 미리보기', texts:'texts.html 미리보기', exhibitions:'exhibitions-projects.html 미리보기', info:'info.html 미리보기'};
+document.getElementById('preview-bar-title').innerText = titles[mode];
 cancelEditWork(); cancelEditText(); cancelEditExhibition();
 updateUI();
 }
 
-function moveItem(array, index, direction){
-const targetIndex = index+direction;
-if(targetIndex<0||targetIndex>=array.length) return;
-const temp = array[index]; array[index]=array[targetIndex]; array[targetIndex]=temp;
-updateUI();
+/* ===================== 정렬(드래그) 공통 ===================== */
+function enableDragReorder(container, array, onReorder, selector, pushesUndo){
+selector = selector || '.item-card';
+if(pushesUndo === undefined) pushesUndo = true;
+let dragIndex = null;
+container.querySelectorAll(selector).forEach((card, idx)=>{
+card.draggable = true;
+card.addEventListener('dragstart', (e)=>{ dragIndex = idx; e.stopPropagation(); });
+card.addEventListener('dragover', (e)=>{ e.preventDefault(); e.stopPropagation(); card.classList.add('drag-over'); });
+card.addEventListener('dragleave', ()=>{ card.classList.remove('drag-over'); });
+card.addEventListener('drop', (e)=>{
+e.preventDefault(); e.stopPropagation(); card.classList.remove('drag-over');
+if(dragIndex===null || dragIndex===idx) return;
+if(pushesUndo) pushUndo();
+const moved = array.splice(dragIndex,1)[0];
+array.splice(idx,0,moved);
+onReorder();
+});
+});
 }
 
-/* --- Works --- */
+/* ===================== Works ===================== */
+function updateSizePreview(){
+const h = parseFloat(document.getElementById('w-h').value) || 0;
+const maxH = Math.max(h, ...worksData.map(w=>parseFloat(w.h)||0), 1);
+document.getElementById('w-size-preview').style.width = (h/maxH*100)+'%';
+}
+async function onWorkImagePicked(files){
+if(!files || !files[0]) return;
+if(!dirHandle){ alert('먼저 폴더를 연결해주세요.'); return; }
+const file = files[0];
+const name = await saveImageFile('images/selected-works', file);
+const dz = document.getElementById('w-dropzone');
+dz.dataset.file = name;
+dz.classList.add('has-image');
+dz.innerHTML = `<img src="${imageUrlCache.get('images/selected-works/'+name)}"><div class="dz-filename">${escapeHtml(name)} · 이미지를 다시 클릭하면 교체할 수 있어요</div>`;
+}
 function editWork(idx){
 editingWorkIndex = idx;
 const w = worksData[idx];
-document.getElementById('w-file').value = w.file;
-document.getElementById('w-h').value = w.h;
 document.getElementById('w-title').value = w.title;
 document.getElementById('w-year').value = w.year;
 document.getElementById('w-material').value = w.material;
 document.getElementById('w-size').value = w.size;
-document.getElementById('works-form-title').innerText = w.title;
+document.getElementById('w-h').value = w.h;
+const dz = document.getElementById('w-dropzone');
+dz.dataset.file = w.file;
+dz.classList.add('has-image');
+getImageObjectUrl('images/selected-works', w.file).then(url=>{
+dz.innerHTML = `<img src="${url||''}"><div class="dz-filename">${escapeHtml(w.file)} · 이미지를 다시 클릭하면 교체할 수 있어요</div>`;
+});
+document.getElementById('works-form-title').innerText = w.title || '작품 수정';
 document.getElementById('works-edit-badge').style.display = 'inline';
 document.getElementById('btn-save-work').innerText = '수정 내용 저장';
 document.getElementById('btn-cancel-work').style.display = 'inline-block';
-updateUI();
+updateSizePreview();
+setMode.__preserve = true;
+window.scrollTo(0,0);
 }
 function cancelEditWork(){
 editingWorkIndex = -1;
-['w-file','w-h','w-title','w-year','w-material','w-size'].forEach(id=>document.getElementById(id).value='');
+['w-title','w-year','w-material','w-size','w-h'].forEach(id=>document.getElementById(id).value='');
+const dz = document.getElementById('w-dropzone');
+dz.dataset.file=''; dz.classList.remove('has-image');
+dz.innerHTML = `<div class="dz-label">이미지를 여기에 끌어다 놓거나 클릭해서 선택하세요</div><input type="file" id="w-file-input" accept="image/*" style="display:none;" onchange="onWorkImagePicked(this.files)">`;
 document.getElementById('works-form-title').innerText = '새 작품 추가하기';
 document.getElementById('works-edit-badge').style.display = 'none';
 document.getElementById('btn-save-work').innerText = '+ 목록에 작품 추가';
 document.getElementById('btn-cancel-work').style.display = 'none';
-updateUI();
+updateSizePreview();
 }
 function saveWork(){
-const file = document.getElementById('w-file').value.trim();
-const h = document.getElementById('w-h').value.trim() || 60;
+const dz = document.getElementById('w-dropzone');
+const file = dz.dataset.file || '';
+const h = document.getElementById('w-h').value.trim() || '60';
 const title = document.getElementById('w-title').value.trim() || 'Untitled';
-const year = document.getElementById('w-year').value.trim() || '2024';
+const year = document.getElementById('w-year').value.trim() || '';
 const material = document.getElementById('w-material').value.trim();
 const size = document.getElementById('w-size').value.trim();
-if(!file){ alert('파일명을 입력하세요.'); return; }
+if(!file){ alert('작품 이미지를 먼저 추가해주세요.'); return; }
+pushUndo();
 if(editingWorkIndex>-1){ worksData[editingWorkIndex] = {file,h,title,year,material,size}; }
 else{ worksData.push({file,h,title,year,material,size}); }
 cancelEditWork();
+updateUI();
+scheduleAutosave();
 }
 function removeWork(idx){
+if(!confirm('이 작품을 목록에서 삭제할까요?')) return;
+pushUndo();
 if(editingWorkIndex===idx) cancelEditWork();
-worksData.splice(idx,1); updateUI();
+worksData.splice(idx,1);
+updateUI();
+scheduleAutosave();
 }
 
-/* --- Texts --- */
+/* ===================== Texts ===================== */
+function renderDynamicTextList(containerId, arr, placeholder, isTextarea){
+const container = document.getElementById(containerId);
+container.innerHTML = '';
+arr.forEach((val, i)=>{
+const row = document.createElement('div');
+row.className = 'sub-item';
+const head = document.createElement('div');
+head.className = 'sub-item-head';
+head.innerHTML = `<span>${i+1}</span>`;
+const removeBtn = document.createElement('button');
+removeBtn.className = 'btn-x'; removeBtn.textContent = '×'; removeBtn.title = '삭제';
+removeBtn.onclick = ()=>{ arr.splice(i,1); renderDynamicTextList(containerId, arr, placeholder, isTextarea); };
+head.appendChild(removeBtn);
+const field = document.createElement(isTextarea?'textarea':'input');
+if(!isTextarea) field.type = 'text';
+field.value = val;
+field.placeholder = placeholder;
+field.oninput = ()=>{ arr[i] = field.value; };
+row.appendChild(head); row.appendChild(field);
+container.appendChild(row);
+});
+}
+function addContentParagraph(){ contentParagraphs.push(''); renderDynamicTextList('t-content-list', contentParagraphs, '문단 내용을 입력하세요', true); }
+function addFootnote(){ footnoteLines.push(''); renderDynamicTextList('t-footnotes-list', footnoteLines, '각주 내용', false); }
+function addStatementParagraph(){ statementParagraphs.push(''); renderDynamicTextList('e-statement-list', statementParagraphs, '서문 문단을 입력하세요', true); }
+function addBioLine(){ bioLines.push(''); renderDynamicTextList('i-bio-list', bioLines, '예: b.1998, Seoul, South Korea', false); }
+
 function editText(idx){
 editingTextIndex = idx;
 const t = textsData[idx];
 document.getElementById('t-author').value = t.author;
 document.getElementById('t-year').value = t.year;
 document.getElementById('t-title').value = t.title;
-document.getElementById('t-content').value = t.content.join('\n\n');
-document.getElementById('t-footnotes').value = (t.footnotes||[]).join('\n');
-document.getElementById('texts-form-title').innerText = t.title;
+contentParagraphs = (t.content||[]).slice();
+footnoteLines = (t.footnotes||[]).slice();
+renderDynamicTextList('t-content-list', contentParagraphs, '문단 내용을 입력하세요', true);
+renderDynamicTextList('t-footnotes-list', footnoteLines, '각주 내용', false);
+document.getElementById('texts-form-title').innerText = t.title || '글 수정';
 document.getElementById('texts-edit-badge').style.display = 'inline';
 document.getElementById('btn-save-text').innerText = '수정 내용 저장';
 document.getElementById('btn-cancel-text').style.display = 'inline-block';
-updateUI();
 }
 function cancelEditText(){
 editingTextIndex = -1;
-['t-author','t-year','t-title','t-content','t-footnotes'].forEach(id=>document.getElementById(id).value='');
+['t-author','t-year','t-title'].forEach(id=>document.getElementById(id).value='');
+contentParagraphs = []; footnoteLines = [];
+renderDynamicTextList('t-content-list', contentParagraphs, '문단 내용을 입력하세요', true);
+renderDynamicTextList('t-footnotes-list', footnoteLines, '각주 내용', false);
 document.getElementById('texts-form-title').innerText = '새 글 / 평론 추가하기';
 document.getElementById('texts-edit-badge').style.display = 'none';
 document.getElementById('btn-save-text').innerText = '+ 목록에 글 추가';
 document.getElementById('btn-cancel-text').style.display = 'none';
-updateUI();
+}
+function nextTextId(){
+let max = 0;
+textsData.forEach(t=>{ const m = /text-(\d+)/.exec(t.id||''); if(m) max = Math.max(max, parseInt(m[1],10)); });
+return 'text-' + (max+1);
 }
 function saveText(){
 const author = document.getElementById('t-author').value.trim();
-const year = document.getElementById('t-year').value.trim() || '2025';
+const year = document.getElementById('t-year').value.trim() || '';
 const title = document.getElementById('t-title').value.trim();
-const rawContent = document.getElementById('t-content').value.trim();
-const rawFootnotes = document.getElementById('t-footnotes').value.trim();
-if(!rawContent){ alert('본문을 입력하세요.'); return; }
-const content = rawContent.split('\n\n').filter(p=>p.trim()!=='');
-const footnotes = rawFootnotes ? rawFootnotes.split('\n').filter(f=>f.trim()!=='') : [];
+const content = contentParagraphs.map(p=>p.trim()).filter(p=>p);
+const footnotes = footnoteLines.map(f=>f.trim()).filter(f=>f);
+if(!content.length){ alert('본문을 한 문단 이상 입력하세요.'); return; }
+pushUndo();
 if(editingTextIndex>-1){ textsData[editingTextIndex] = {id:textsData[editingTextIndex].id, author, title, year, content, footnotes}; }
-else{ textsData.push({id:'text-'+Date.now(), author, title, year, content, footnotes}); }
+else{ textsData.push({id:nextTextId(), author, title, year, content, footnotes}); }
 cancelEditText();
+updateUI();
+scheduleAutosave();
 }
 function removeText(idx){
+if(!confirm('이 글을 목록에서 삭제할까요?')) return;
+pushUndo();
 if(editingTextIndex===idx) cancelEditText();
-textsData.splice(idx,1); updateUI();
+textsData.splice(idx,1);
+updateUI();
+scheduleAutosave();
 }
 
-/* --- Exhibitions --- */
+/* ===================== Exhibitions ===================== */
+function suggestExhibitionFilename(){
+if(exhibitionFilenameTouched) return;
+const titleVal = document.getElementById('e-title').value;
+let slug = slugifyForFilename(titleVal);
+if(!slug) slug = 'exhibition-' + (exhibitionsData.length+1);
+document.getElementById('e-link').value = slug + '.html';
+}
+document.getElementById('e-link').addEventListener('input', ()=>{ exhibitionFilenameTouched = true; });
+
+async function onExhibitionThumbPicked(files){
+if(!files || !files[0]) return;
+if(!dirHandle){ alert('먼저 폴더를 연결해주세요.'); return; }
+const name = await saveImageFile('images/exhibitions', files[0]);
+const dz = document.getElementById('e-dropzone');
+dz.dataset.file = name;
+dz.classList.add('has-image');
+dz.innerHTML = `<img src="${imageUrlCache.get('images/exhibitions/'+name)}"><div class="dz-filename">${escapeHtml(name)} · 이미지를 다시 클릭하면 교체할 수 있어요</div>`;
+}
+async function onExhibitionPhotosPicked(files){
+if(!files || !files.length) return;
+if(!dirHandle){ alert('먼저 폴더를 연결해주세요.'); return; }
+for(const file of files){
+const name = await saveImageFile('images/exhibitions', file);
+photoRows.push({file:name, caption:''});
+}
+renderPhotoRows();
+}
+function renderPhotoRows(){
+const container = document.getElementById('e-photos-list');
+container.innerHTML = '';
+photoRows.forEach((p, i)=>{
+const row = document.createElement('div');
+row.className = 'photo-row';
+const handle = document.createElement('span');
+handle.className = 'drag-handle'; handle.textContent = '⠿'; handle.title = '드래그해서 순서 변경';
+const order = document.createElement('span');
+order.className = 'photo-order'; order.textContent = (i+1);
+const img = document.createElement('img');
+getImageObjectUrl('images/exhibitions', p.file).then(url=>{ if(url) img.src = url; });
+const capInput = document.createElement('input');
+capInput.type = 'text'; capInput.placeholder = '캡션 (선택, 비워두면 표시되지 않음)'; capInput.value = p.caption || '';
+capInput.oninput = ()=>{ photoRows[i].caption = capInput.value; };
+const removeBtn = document.createElement('button');
+removeBtn.className = 'btn-x'; removeBtn.textContent = '×'; removeBtn.title = '삭제';
+removeBtn.onclick = ()=>{ photoRows.splice(i,1); renderPhotoRows(); };
+row.appendChild(handle); row.appendChild(order); row.appendChild(img); row.appendChild(capInput); row.appendChild(removeBtn);
+container.appendChild(row);
+});
+enableDragReorder(container, photoRows, renderPhotoRows, '.photo-row', false);
+}
 function editExhibition(idx){
 editingExhibitionIndex = idx;
+exhibitionFilenameTouched = true;
 const e = exhibitionsData[idx];
-document.getElementById('e-link').value = e.link;
-document.getElementById('e-img').value = e.img;
-document.getElementById('e-caption').value = e.caption;
-document.getElementById('e-title').value = e.title||'';
-document.getElementById('e-venue').value = e.venue||'';
-document.getElementById('e-daterange').value = e.dateRange||'';
-document.getElementById('e-statement').value = e.statement||'';
-document.getElementById('e-photos').value = (e.photos||[]).map(p=>p.file+' | '+p.caption).join('\n');
-document.getElementById('exhibitions-form-title').innerText = e.caption;
+document.getElementById('e-caption').value = e.caption || '';
+document.getElementById('e-title').value = e.title || '';
+document.getElementById('e-venue').value = e.venue || '';
+document.getElementById('e-daterange').value = e.dateRange || '';
+document.getElementById('e-link').value = e.link || '';
+const dz = document.getElementById('e-dropzone');
+dz.dataset.file = e.img || '';
+dz.classList.add('has-image');
+getImageObjectUrl('images/exhibitions', e.img).then(url=>{
+dz.innerHTML = `<img src="${url||''}"><div class="dz-filename">${escapeHtml(e.img||'')} · 이미지를 다시 클릭하면 교체할 수 있어요</div>`;
+});
+statementParagraphs = (e.statement||[]).slice();
+photoRows = (e.photos||[]).map(p=>({file:p.file, caption:p.caption||''}));
+renderDynamicTextList('e-statement-list', statementParagraphs, '서문 문단을 입력하세요', true);
+renderPhotoRows();
+document.getElementById('exhibitions-form-title').innerText = e.caption || '전시 수정';
 document.getElementById('exhibitions-edit-badge').style.display = 'inline';
 document.getElementById('btn-save-exhibition').innerText = '수정 내용 저장';
 document.getElementById('btn-cancel-exhibition').style.display = 'inline-block';
-updateUI();
 }
 function cancelEditExhibition(){
 editingExhibitionIndex = -1;
-['e-link','e-img','e-caption','e-title','e-venue','e-daterange','e-statement','e-photos'].forEach(id=>document.getElementById(id).value='');
+exhibitionFilenameTouched = false;
+['e-caption','e-title','e-venue','e-daterange','e-link'].forEach(id=>document.getElementById(id).value='');
+const dz = document.getElementById('e-dropzone');
+dz.dataset.file=''; dz.classList.remove('has-image');
+dz.innerHTML = `<div class="dz-label">이미지를 여기에 끌어다 놓거나 클릭해서 선택하세요</div><input type="file" id="e-file-input" accept="image/*" style="display:none;" onchange="onExhibitionThumbPicked(this.files)">`;
+statementParagraphs = []; photoRows = [];
+renderDynamicTextList('e-statement-list', statementParagraphs, '서문 문단을 입력하세요', true);
+renderPhotoRows();
 document.getElementById('exhibitions-form-title').innerText = '새 전시 추가하기';
 document.getElementById('exhibitions-edit-badge').style.display = 'none';
 document.getElementById('btn-save-exhibition').innerText = '+ 목록에 전시 추가';
 document.getElementById('btn-cancel-exhibition').style.display = 'none';
-updateUI();
-}
-function parsePhotos(raw){
-return raw.split('\n').map(l=>l.trim()).filter(l=>l).map(l=>{
-const parts = l.split('|');
-return {file:(parts[0]||'').trim(), caption:(parts[1]||'').trim()};
-});
 }
 function saveExhibition(){
-const link = document.getElementById('e-link').value.trim() || 'Amator.html';
-const img = document.getElementById('e-img').value.trim() || 'Amator0.jpg';
+const dz = document.getElementById('e-dropzone');
+const img = dz.dataset.file || '';
 const caption = document.getElementById('e-caption').value.trim();
 const title = document.getElementById('e-title').value.trim();
 const venue = document.getElementById('e-venue').value.trim();
 const dateRange = document.getElementById('e-daterange').value.trim();
-const statement = document.getElementById('e-statement').value.trim();
-const photos = parsePhotos(document.getElementById('e-photos').value);
-const item = {link,img,caption,title,venue,dateRange,statement,photos};
+let link = document.getElementById('e-link').value.trim();
+const statement = statementParagraphs.map(p=>p.trim()).filter(p=>p);
+const photos = photoRows.map(p=>({file:p.file, caption:(p.caption||'').trim()}));
+if(!img){ alert('목록용 대표 이미지를 먼저 추가해주세요.'); return; }
+if(!caption){ alert('목록용 캡션을 입력해주세요.'); return; }
+if(!link){ link = (slugifyForFilename(title) || 'exhibition-'+(exhibitionsData.length+1)) + '.html'; }
+if(!/\.html?$/i.test(link)) link += '.html';
+const item = {link, img, caption, title, venue, dateRange, statement, photos};
+pushUndo();
 if(editingExhibitionIndex>-1){ exhibitionsData[editingExhibitionIndex] = item; }
 else{ exhibitionsData.push(item); }
 cancelEditExhibition();
+updateUI();
+scheduleAutosave();
 }
 function removeExhibition(idx){
+if(!confirm('이 전시를 목록에서 삭제할까요?\n(상세 페이지 파일은 폴더에 그대로 남아있으니 필요 없으면 직접 지워주세요.)')) return;
+pushUndo();
 if(editingExhibitionIndex===idx) cancelEditExhibition();
-exhibitionsData.splice(idx,1); updateUI();
+exhibitionsData.splice(idx,1);
+updateUI();
+scheduleAutosave();
 }
 
-/* --- UI --- */
-function updateUI(){
+/* ===================== Info ===================== */
+function fillInfoForm(){
+document.getElementById('i-name').value = infoData.nameLine || '';
+document.getElementById('i-email').value = infoData.email || '';
+document.getElementById('i-phone').value = infoData.phone || '';
+bioLines = (infoData.bioLines||[]).slice();
+renderDynamicTextList('i-bio-list', bioLines, '예: b.1998, Seoul, South Korea', false);
+document.getElementById('i-cv-label').textContent = infoData.cvFile ? ('현재 파일: ' + infoData.cvFile + ' · 클릭해서 교체') : 'PDF를 여기에 끌어다 놓거나 클릭해서 선택하세요';
+}
+async function onCvPicked(files){
+if(!files || !files[0]) return;
+if(!dirHandle){ alert('먼저 폴더를 연결해주세요.'); return; }
+const file = files[0];
+const name = sanitizeFilename(file.name);
+await writeBinaryFile('assets', name, await file.arrayBuffer());
+infoData.cvFile = name;
+document.getElementById('i-cv-label').textContent = '현재 파일: ' + name + ' · 클릭해서 교체';
+scheduleAutosave();
+showToast('CV 파일을 저장했습니다: ' + name);
+}
+function saveInfo(){
+pushUndo();
+infoData.nameLine = document.getElementById('i-name').value.trim();
+infoData.email = document.getElementById('i-email').value.trim();
+infoData.phone = document.getElementById('i-phone').value.trim();
+infoData.bioLines = bioLines.map(l=>l.trim()).filter(l=>l);
+updateUI();
+scheduleAutosave();
+showToast('소개 정보를 반영했습니다. "전체 저장"을 눌러야 실제 파일에 반영됩니다.');
+}
+
+/* ===================== 목록 렌더링 ===================== */
+async function updateUI(){
+document.getElementById('draft-status').textContent = document.getElementById('draft-status').textContent; // no-op keep
+
 document.getElementById('works-list').innerHTML = worksData.map((w,idx)=>`
-<div class="item-card ${editingWorkIndex===idx?'editing':''}">
-<div class="item-info"><strong>${idx+1}.</strong> ${w.title} (${w.h}cm) ${w.size?'· '+w.size:''} ${w.material?'· '+w.material:''}</div>
+<div class="item-card ${editingWorkIndex===idx?'editing':''}" data-idx="${idx}">
+<span class="drag-handle">⠿</span>
+<img class="item-thumb" data-thumb="works:${escapeHtml(w.file)}">
+<div class="item-info"><strong>${idx+1}.</strong> ${escapeHtml(w.title)} (${escapeHtml(String(w.h))}cm) ${w.size?'· '+escapeHtml(w.size):''} ${w.material?'· '+escapeHtml(w.material):''}
+<div class="size-bar-track"><div class="size-bar-fill" style="width:${Math.min(100, (parseFloat(w.h)||0)/Math.max(1,...worksData.map(x=>parseFloat(x.h)||0))*100)}%;"></div></div>
+</div>
 <div class="item-controls">
-<button class="btn-edit" onclick="editWork(${idx})">수정</button>
-<button class="btn-reorder" onclick="moveItem(worksData,${idx},-1)">▲</button>
-<button class="btn-reorder" onclick="moveItem(worksData,${idx},1)">▼</button>
-<button class="btn-delete" onclick="removeWork(${idx})">삭제</button>
+<button class="btn-mini edit" onclick="editWork(${idx})">수정</button>
+<button class="btn-mini delete" onclick="removeWork(${idx})">삭제</button>
 </div></div>`).join('');
 
 document.getElementById('texts-list').innerHTML = textsData.map((t,idx)=>`
-<div class="item-card ${editingTextIndex===idx?'editing':''}">
-<div class="item-info"><strong>${idx+1}.</strong> ${t.author}, ${t.title} (${t.year})</div>
+<div class="item-card ${editingTextIndex===idx?'editing':''}" data-idx="${idx}">
+<span class="drag-handle">⠿</span>
+<div class="item-info"><strong>${idx+1}.</strong> ${escapeHtml(t.author)}, ${escapeHtml(t.title)} (${escapeHtml(t.year)})</div>
 <div class="item-controls">
-<button class="btn-edit" onclick="editText(${idx})">수정</button>
-<button class="btn-reorder" onclick="moveItem(textsData,${idx},-1)">▲</button>
-<button class="btn-reorder" onclick="moveItem(textsData,${idx},1)">▼</button>
-<button class="btn-delete" onclick="removeText(${idx})">삭제</button>
+<button class="btn-mini edit" onclick="editText(${idx})">수정</button>
+<button class="btn-mini delete" onclick="removeText(${idx})">삭제</button>
 </div></div>`).join('');
 
 document.getElementById('exhibitions-list').innerHTML = exhibitionsData.map((e,idx)=>`
-<div class="item-card ${editingExhibitionIndex===idx?'editing':''}">
-<div class="item-info"><strong>${idx+1}.</strong> ${e.caption}</div>
+<div class="item-card ${editingExhibitionIndex===idx?'editing':''}" data-idx="${idx}">
+<span class="drag-handle">⠿</span>
+<img class="item-thumb" data-thumb="exhibitions:${escapeHtml(e.img)}">
+<div class="item-info"><strong>${idx+1}.</strong> ${escapeHtml(e.caption)}</div>
 <div class="item-controls">
-<button class="btn-edit" onclick="editExhibition(${idx})">수정</button>
-<button class="btn-detail" onclick="saveExhibitionDetail(${idx})">상세페이지</button>
-<button class="btn-reorder" onclick="moveItem(exhibitionsData,${idx},-1)">▲</button>
-<button class="btn-reorder" onclick="moveItem(exhibitionsData,${idx},1)">▼</button>
-<button class="btn-delete" onclick="removeExhibition(${idx})">삭제</button>
+<button class="btn-mini edit" onclick="editExhibition(${idx})">수정</button>
+<button class="btn-mini delete" onclick="removeExhibition(${idx})">삭제</button>
 </div></div>`).join('');
 
-const iframe = document.getElementById('preview-frame');
-const doc = iframe.contentWindow.document;
-doc.open(); doc.write(generatePreviewDocument(currentMode)); doc.close();
+// 썸네일 비동기 채우기
+document.querySelectorAll('img.item-thumb[data-thumb]').forEach(async img=>{
+const [subfolder, filename] = img.dataset.thumb.split(':');
+if(!filename) return;
+const path = subfolder==='works' ? 'images/selected-works' : 'images/exhibitions';
+const url = await getImageObjectUrl(path, filename);
+if(url) img.src = url;
+});
+
+enableDragReorder(document.getElementById('works-list'), worksData, ()=>{ updateUI(); scheduleAutosave(); });
+enableDragReorder(document.getElementById('texts-list'), textsData, ()=>{ updateUI(); scheduleAutosave(); });
+enableDragReorder(document.getElementById('exhibitions-list'), exhibitionsData, ()=>{ updateUI(); scheduleAutosave(); });
+
+updatePreview();
 }
 
-/* --- works.html --- */
+/* ===================== 실제 사이트 템플릿과 동일한 마크업 생성 ===================== */
+const TYPEKIT_SCRIPT = `  <script>
+    (function(d) {
+      var config = {
+        kitId: 'uuz4kkr',
+        scriptTimeout: 3000,
+        async: true
+      },
+      h=d.documentElement,t=setTimeout(function(){h.className=h.className.replace(/\\bwf-loading\\b/g,"")+" wf-inactive";},config.scriptTimeout),tk=d.createElement("script"),f=false,s=d.getElementsByTagName("script")[0],a;h.className+=" wf-loading";tk.src='https://use.typekit.net/'+config.kitId+'.js';tk.async=true;tk.onload=tk.onreadystatechange=function(){a=this.readyState;if(f||a&&a!="complete"&&a!="loaded")return;f=true;clearTimeout(t);try{Typekit.load(config)}catch(e){}};s.parentNode.insertBefore(tk,s)
+    })(document);
+  <\/script>`;
+const NAV_LINKS = [
+{key:'exhibitions', href:'exhibitions-projects.html', label:'Exhibitions &amp; Projects'},
+{key:'works', href:'works.html', label:'Selected Works'},
+{key:'texts', href:'texts.html', label:'Texts'},
+{key:'info', href:'info.html', label:'Info'},
+{key:'etc', href:'etc.html', label:'etc...'}
+];
+function navHtml(active){
+const links = NAV_LINKS.map(l=>`<a href="${l.href}" class="nav-link${l.key===active?' active':''}">${l.label}</a>`).join(' / ');
+return `  <header>
+    <nav class="nav-text"><span class="nav-name"><a href="index.html" class="nav-link">Ku Taeseung</a></span><span class="nav-sep"> / </span><span class="nav-links">${links}</span></nav>
+  </header>`;
+}
+function pageHead(title, extraStyle){
+return `<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ku Taeseung - ${escapeHtml(title)}</title>
+${TYPEKIT_SCRIPT}
+  <link rel="icon" href="favicon.ico">
+  <link rel="stylesheet" href="style.css">${extraStyle ? '\n'+extraStyle : ''}
+</head>`;
+}
+const WORKS_PAGE_STYLE = `  <style>
+    /* Selected Works 전용 인라인 CSS */
+    .works-wall {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: 24px;
+      row-gap: 80px;
+      width: 100%;
+    }
+
+
+
+    .work-frame {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: flex-start;
+      flex-shrink: 0;
+      /* 1cm = 2.8px 비례 스케일 */
+      height: calc(var(--h, 60) * 2.8px);
+      cursor: pointer;
+    }
+
+
+
+    .work-frame img {
+      height: 100% !important;
+      width: auto !important;
+      max-width: none !important;
+      display: block;
+      object-fit: contain;
+      transition: opacity 0.2s ease;
+    }
+
+
+
+    .work-frame:hover img {
+      opacity: 0.85;
+    }
+
+
+
+    /* 라이트박스 모달 */
+    .work-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: #ffffff;
+      z-index: 99999;
+      cursor: pointer;
+      padding: 40px;
+      box-sizing: border-box;
+    }
+
+
+
+    .work-modal.active {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+
+
+    .modal-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      max-width: 90vw;
+      max-height: 90vh;
+      cursor: default;
+    }
+
+
+
+    .modal-box img {
+      max-width: 82vw;
+      max-height: 75vh;
+      width: auto !important;
+      height: auto !important;
+      object-fit: contain;
+      display: block;
+      cursor: pointer;
+    }
+
+
+
+    .modal-caption {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 15px;
+      font-family: inherit;
+      color: #000000;
+      line-height: 1.5;
+    }
+
+
+    /* 모바일 반응형: 한 작품씩 세로로, 가운데 정렬 (가로 스크롤 방지) */
+    @media (max-width: 768px) {
+      .works-wall {
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+        row-gap: 40px;
+      }
+
+
+      .work-frame {
+        width: 100%;
+        align-items: center;
+        height: calc(var(--h, 60) * 1.6px);
+      }
+    }
+  </style>`;
+
 function generateWorksHtml(){
-const items = worksData.map((w,idx)=>`<!-- ${idx+1}. ${w.title} -->
-<div class="work-frame" style="--h:${w.h};" onclick="openModal(this,'${w.title}','${w.year}','${w.material}','${w.size}')">
-<img src="images/selected-works/${w.file}" alt="${w.title}">
-</div>`).join('\n');
+const items = worksData.map((w)=>`      <div class="work-frame" style="--h: ${escapeHtml(String(w.h))};" data-title="${escapeHtml(w.title)}" data-year="${escapeHtml(w.year)}" data-material="${escapeHtml(w.material)}" data-size="${escapeHtml(w.size)}">
+        <img src="images/selected-works/${escapeHtml(w.file)}" alt="${escapeHtml(w.title)}">
+      </div>`).join('\n\n\n\n');
 return `<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ku Taeseung - Selected Works</title>
-<link rel="stylesheet" href="style.css">
-<style>
-.works-wall{display:flex;flex-wrap:wrap;align-items:flex-start;gap:24px;row-gap:80px;width:100%;}
-.work-frame{display:inline-flex;flex-direction:column;align-items:flex-start;flex-shrink:0;height:calc(var(--h,60)*2.8px);cursor:pointer;}
-.work-frame img{height:100% !important;width:auto !important;max-width:none !important;display:block;object-fit:contain;transition:opacity 0.2s ease;}
-.work-modal{display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;background-color:rgba(255,255,255,0.98);z-index:99999;cursor:pointer;padding:40px;box-sizing:border-box;}
-.work-modal.active{display:flex;flex-direction:column;align-items:center;justify-content:center;}
-.modal-box{display:flex;flex-direction:column;align-items:center;justify-content:center;max-width:90vw;max-height:90vh;cursor:default;}
-.modal-box img{max-width:82vw;max-height:75vh;width:auto !important;height:auto !important;object-fit:contain;display:block;cursor:pointer;}
-.modal-caption{margin-top:20px;text-align:center;font-size:15px;font-family:inherit;color:#000;line-height:1.5;}
-@media (max-width:768px){
-.works-wall{flex-direction:column;align-items:center;gap:16px;row-gap:40px;}
-.work-frame{width:100%;align-items:center;}
-}
-</style>
-</head>
+<html lang="en">
+${pageHead('Selected Works', WORKS_PAGE_STYLE)}
 <body>
-<header>
-<nav class="nav-text">
-<a href="index.html" class="nav-link">Ku Taeseung</a>
-<a href="exhibitions.html" class="nav-link">Exhibitions</a>
-<a href="works.html" class="nav-link active">Selected Works</a>
-<a href="texts.html" class="nav-link">Texts</a>
-<a href="info.html" class="nav-link">Info</a>
-<a href="etc.html" class="nav-link">etc...</a>
-</nav>
-</header>
-<main>
-<div class="works-wall">
+
+
+${navHtml('works')}
+
+
+  <main>
+    <div class="works-wall" id="works-wall">
+
+
 ${items}
-</div>
-</main>
-<div id="work-modal" class="work-modal" onclick="closeModal()">
-<div class="modal-box" onclick="event.stopPropagation()">
-<img id="modal-img" src="" alt="" onclick="closeModal()">
-<p id="modal-caption" class="modal-caption"></p>
-</div>
-</div>
-<script>
-function openModal(element,title,year,material,size){
-const img = element.querySelector('img');
-const modal = document.getElementById('work-modal');
-const modalImg = document.getElementById('modal-img');
-const modalCaption = document.getElementById('modal-caption');
-modalImg.src = img.src;
-const parts = [];
-if(title) parts.push(title);
-if(year) parts.push(year);
-if(material) parts.push(material);
-if(size) parts.push(size+'cm');
-modalCaption.innerHTML = parts.join(', ');
-modal.classList.add('active');
-document.body.style.overflow = 'hidden';
-}
-function closeModal(){
-document.getElementById('work-modal').classList.remove('active');
-document.body.style.overflow = '';
-}
-document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
-<\/script>
+
+
+    </div>
+  </main>
+
+
+  <div id="work-modal" class="work-modal" onclick="closeModal()">
+    <div class="modal-box" onclick="event.stopPropagation()">
+      <img id="modal-img" src="" alt="" onclick="closeModal()">
+      <p id="modal-caption" class="modal-caption"></p>
+    </div>
+  </div>
+
+
+  <script>
+    document.getElementById('works-wall').addEventListener('click', function(e) {
+      const frame = e.target.closest('.work-frame');
+      if (!frame) return;
+      openModal(frame, frame.dataset.title, frame.dataset.year, frame.dataset.material, frame.dataset.size);
+    });
+
+    function openModal(element, title, year, material, size) {
+      const img = element.querySelector('img');
+      const modal = document.getElementById('work-modal');
+      const modalImg = document.getElementById('modal-img');
+      const modalCaption = document.getElementById('modal-caption');
+
+      modalImg.src = img.src;
+
+      const parts = [];
+      if (title) parts.push(title);
+      if (year) parts.push(year);
+      if (material) parts.push(material);
+      if (size) parts.push(size);
+
+      modalCaption.textContent = parts.join(', ');
+
+      modal.classList.add('active');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      const modal = document.getElementById('work-modal');
+      modal.classList.remove('active');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape') closeModal();
+    });
+  <\/script>
+
+
 </body>
-</html>`;
+</html>
+`;
 }
 
-/* --- exhibitions.html (grid list) --- */
-function generateExhibitionsHtml(){
-const items = exhibitionsData.map(e=>`<div class="grid-right-8">
-<a href="${e.link}" class="item-link">
-<img src="images/exhibitions/${e.img}" alt="${e.caption}">
-<p class="caption-right">${e.caption}</p>
-</a>
-</div>`).join('\n');
+function generateExhibitionsListHtml(){
+const items = exhibitionsData.map(e=>`      <div class="grid-right-8">
+        <a href="${escapeHtml(e.link)}" class="item-link">
+          <img src="images/exhibitions/${escapeHtml(e.img)}" alt="${escapeHtml(e.caption)}">
+          <p class="caption-right">${escapeHtml(e.caption)}</p>
+        </a>
+      </div>`).join('\n\n\n\n');
 return `<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ku Taeseung - Exhibitions</title>
-<link rel="stylesheet" href="style.css">
-</head>
+<html lang="en">
+${pageHead('Exhibitions &amp; Projects')}
 <body>
-<header>
-<nav class="nav-text">
-<a href="index.html" class="nav-link">Ku Taeseung</a>
-<a href="exhibitions.html" class="nav-link active">Exhibitions</a>
-<a href="works.html" class="nav-link">Selected Works</a>
-<a href="texts.html" class="nav-link">Texts</a>
-<a href="info.html" class="nav-link">Info</a>
-<a href="etc.html" class="nav-link">etc...</a>
-</nav>
-</header>
-<main>
-<div class="grid-12">
+
+
+${navHtml('exhibitions')}
+
+
+  <main>
+    <div class="grid-12">
+
+
 ${items}
-</div>
-</main>
+
+
+    </div>
+  </main>
+
+
 </body>
-</html>`;
+</html>
+`;
 }
 
-/* --- exhibition detail page (Amator.html 구조) --- */
 function generateExhibitionDetailHtml(e){
-const photoItems = (e.photos||[]).map(p=>`<div class="archive-photo-item">
-<img src="images/exhibitions/${p.file}" alt="${p.caption}">
-<p class="caption-right">${p.caption}</p>
-</div>`).join('\n');
+const statementHtml = (e.statement && e.statement.length)
+? e.statement.map(escapeHtml).join('<br><br>\n            ')
+: '';
+const photosHtml = (e.photos||[]).map(p=>`        <div>
+          <img src="images/exhibitions/${escapeHtml(p.file)}" alt="${escapeHtml(p.caption || e.caption || '')}">${p.caption?`\n          <p class="caption-right">${escapeHtml(p.caption)}</p>`:''}
+        </div>`).join('\n\n\n');
 return `<!DOCTYPE html>
-<html lang="ko">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ku Taeseung - ${e.title||e.caption}</title>
-<style>
-html{overflow-y:scroll;}
-*,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
-::selection{background-color:#ffff00;color:#000;}
-::-moz-selection{background-color:#ffff00;color:#000;}
-body{background-color:#fff;color:#000;font-family:"Times New Roman",Times,"Apple SD Gothic Neo",serif;font-size:15px;line-height:1.45;-webkit-font-smoothing:antialiased;}
-header{padding:32px 32px 0 32px;background:#fff;}
-.nav-text{font-family:inherit;font-size:inherit;line-height:inherit;color:#000;white-space:nowrap;}
-.nav-link{color:#000;text-decoration:none;}
-.nav-link:hover,.nav-link.active{background-color:#ffff00;color:#000;}
-main{padding:40px 32px 100px 32px;width:100%;}
-.grid-12{display:grid;grid-template-columns:repeat(12,1fr);column-gap:20px;row-gap:60px;width:100%;}
-.grid-left-4{grid-column:1/5;}
-.exhibition-title{font-size:16px;margin-bottom:8px;}
-.exhibition-meta{font-size:14px;color:#555;line-height:1.6;margin-bottom:24px;}
-.exhibition-statement{font-size:14px;line-height:1.7;}
-.grid-right-8{grid-column:5/13;display:flex;flex-direction:column;gap:60px;}
-.archive-photo-item img{width:100%;height:auto;display:block;}
-.caption-right{margin-top:10px;text-align:right;font-size:14px;color:#000;white-space:nowrap;}
-@media (max-width:768px){
-header{padding:20px 20px 0 20px;}
-.nav-text{white-space:normal;}
-main{padding:24px 20px 40px 20px;}
-.grid-12{grid-template-columns:1fr;}
-.grid-left-4,.grid-right-8{grid-column:1/-1;}
-.caption-right{white-space:normal;}
-}
-</style>
-</head>
+<html lang="en">
+${pageHead(e.title || e.caption || 'Exhibition')}
 <body>
-<header>
-<nav class="nav-text">
-<a href="index.html" class="nav-link">Ku Taeseung</a>
-<a href="exhibitions.html" class="nav-link active">Exhibitions</a>
-<a href="works.html" class="nav-link">Selected Works</a>
-<a href="texts.html" class="nav-link">Texts</a>
-<a href="info.html" class="nav-link">Info</a>
-<a href="etc.html" class="nav-link">etc...</a>
-</nav>
-</header>
-<main>
-<div class="grid-12">
-<div class="grid-left-4">
-<h1 class="exhibition-title">${e.title||''}</h1>
-<p class="exhibition-meta">${e.venue||''}<br>${e.dateRange||''}</p>
-<div class="exhibition-statement"><p>${e.statement||''}</p></div>
-</div>
-<div class="grid-right-8">
-${photoItems}
-</div>
-</div>
-</main>
+
+
+${navHtml('exhibitions')}
+
+
+  <main>
+    <div class="grid-12">
+
+
+      <div class="grid-left-4">
+        <h1 class="exhibition-title">${escapeHtml(e.title||'')}</h1>
+        <p class="exhibition-meta">
+          ${escapeHtml(e.venue||'')}<br>
+          ${escapeHtml(e.dateRange||'')}<br>
+        </p>
+        <div class="exhibition-statement">
+          <p>${statementHtml}</p>
+        </div>
+      </div>
+
+
+      <div class="grid-right-8 archive-photos">
+${photosHtml}
+      </div>
+
+
+    </div>
+  </main>
+
+
 </body>
-</html>`;
+</html>
+`;
 }
 
-async function saveExhibitionDetail(idx){
-const e = exhibitionsData[idx];
-const content = generateExhibitionDetailHtml(e);
-const filename = e.link || 'exhibition.html';
-if(dirHandle){
-try{
-await writeFileToFolder(filename, content);
-alert(filename + ' 저장 완료');
-}catch(err){ alert('저장 실패: ' + err.message); }
-}else{
-downloadBlob(content, filename, 'text/html;charset=utf-8');
-}
+function generateInfoHtml(){
+const telHref = '+' + (infoData.phone||'').replace(/[^0-9]/g,'');
+return `<!DOCTYPE html>
+<html lang="en">
+${pageHead('Info')}
+<body class="info-body">
+
+
+${navHtml('info')}
+
+
+  <main class="info-main">
+    <div class="info-card">
+      <div class="info-name">${escapeHtml(infoData.nameLine||'')}</div>
+      <div class="info-desc">
+        ${(infoData.bioLines||[]).map(escapeHtml).join('<br>\n        ')}
+      </div>
+      <div class="info-contact">
+        <a href="mailto:${escapeHtml(infoData.email||'')}">${escapeHtml(infoData.email||'')}</a><br>
+        <a href="tel:${escapeHtml(telHref)}">${escapeHtml(infoData.phone||'')}</a>
+      </div>
+      <div class="info-cv">
+        <a href="assets/${escapeHtml(infoData.cvFile||'')}" target="_blank" rel="noopener noreferrer">CV (PDF)</a>
+      </div>
+    </div>
+  </main>
+
+
+</body>
+</html>
+`;
 }
 
-/* --- texts.html preview (reader) --- */
-function generateTextsJson(){
-return JSON.stringify(textsData, null, 2);
-}
-function generatePreviewDocument(mode){
-if(mode==='works') return generateWorksHtml();
-if(mode==='exhibitions') return generateExhibitionsHtml();
-const navLinks = textsData.map(t=>`<a class="reader-link" onclick="showText('${t.id}',this)">${t.author}, ${t.title} (${t.year})</a>`).join('\n');
+/* texts.html은 실제로 texts-data.json을 fetch해서 렌더링하므로, 미리보기는
+   실제 texts.html의 렌더링 스크립트를 그대로 복제해 현재 편집 중인 데이터로 그려준다. */
+function generateTextsPreviewHtml(){
+const navLinks = textsData.map(t=>`<a class="reader-link" data-id="${t.id}">${escapeHtml(t.author)}, 〈${escapeHtml(t.title)}〉, ${escapeHtml(t.year)}</a>`).join('\n');
 const articles = textsData.map(t=>{
-const pTags = t.content.map(p=>`<p>${p}</p>`).join('\n');
-const fnTags = (t.footnotes&&t.footnotes.length>0) ? `<div class="reader-footnotes" style="margin-top:36px;padding-top:16px;border-top:1px solid #eee;font-size:13.5px;line-height:1.6;">${t.footnotes.map(f=>`<p style="margin-bottom:4px;text-indent:0;">${f}</p>`).join('\n')}</div>` : '';
+const pTags = (t.content||[]).map(p=>`<p>${escapeHtml(p)}</p>`).join('\n');
+const fnTags = (t.footnotes&&t.footnotes.length>0) ? `<div class="reader-footnotes" style="margin-top:36px;padding-top:16px;border-top:1px solid #eee;font-size:13.5px;line-height:1.6;">${t.footnotes.map(f=>`<p style="margin-bottom:4px;text-indent:0;">${escapeHtml(f)}</p>`).join('\n')}</div>` : '';
 return `<article id="${t.id}" class="reader-article" style="display:none;">
-<header class="reader-header" style="padding:0;background:none;">
-<h1 class="reader-title">${t.title}</h1>
-<p class="reader-meta">${t.author}, ${t.year}</p>
-</header>
 <div class="reader-body">${pTags}${fnTags}</div>
 </article>`;
 }).join('\n');
 return `<!DOCTYPE html>
-<html lang="ko">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-<nav class="nav-text">
-<a class="nav-link">Ku Taeseung</a>
-<a class="nav-link">Exhibitions</a>
-<a class="nav-link">Selected Works</a>
-<a class="nav-link active">Texts</a>
-<a class="nav-link">Info</a>
-<a class="nav-link">etc...</a>
-</nav>
-</header>
+${navHtml('texts')}
 <main>
 <div class="reader-container">
 <nav class="reader-nav"><div class="reader-group">${navLinks}</div></nav>
@@ -647,35 +1362,64 @@ return `<!DOCTYPE html>
 </div>
 </main>
 <script>
-function showText(id,element){
-document.querySelectorAll('.reader-article').forEach(el=>el.style.display='none');
-const target = document.getElementById(id);
+document.querySelectorAll('.reader-link').forEach(function(link){
+link.addEventListener('click', function(){
+document.querySelectorAll('.reader-article').forEach(function(el){ el.style.display='none'; });
+const target = document.getElementById(link.dataset.id);
 if(target) target.style.display='block';
-document.querySelectorAll('.reader-link').forEach(el=>el.classList.remove('active'));
-if(element) element.classList.add('active');
-}
+document.querySelectorAll('.reader-link').forEach(function(el){ el.classList.remove('active'); });
+link.classList.add('active');
+});
+});
+const first = document.querySelector('.reader-link');
+if(first) first.click();
 <\/script>
 </body>
 </html>`;
 }
 
-async function downloadCurrentFile(){
-let content, filename, mimeType;
-if(currentMode==='works'){ content=generateWorksHtml(); filename='works.html'; mimeType='text/html;charset=utf-8'; }
-else if(currentMode==='texts'){ content=generateTextsJson(); filename='texts-data.json'; mimeType='application/json;charset=utf-8'; }
-else{ content=generateExhibitionsHtml(); filename='exhibitions.html'; mimeType='text/html;charset=utf-8'; }
+function generateInfoPreviewHtml(){ return generateInfoHtml(); }
 
-if(dirHandle){
+function updatePreview(){
+const iframe = document.getElementById('preview-frame');
+const doc = iframe.contentWindow.document;
+let html;
+if(currentMode==='works') html = generateWorksHtml();
+else if(currentMode==='exhibitions') html = generateExhibitionsListHtml();
+else if(currentMode==='info') html = generateInfoPreviewHtml();
+else html = generateTextsPreviewHtml();
+doc.open(); doc.write(html); doc.close();
+}
+
+/* ===================== 전체 저장 ===================== */
+async function saveAll(){
+if(!dirHandle){ alert('먼저 폴더를 연결해주세요.'); return; }
 try{
-await writeFileToFolder(filename, content);
-alert(filename + ' 저장 완료');
-}catch(err){ alert('저장 실패: ' + err.message + '\n다운로드로 대신 저장합니다.'); downloadBlob(content, filename, mimeType); }
-}else{
-downloadBlob(content, filename, mimeType);
+await writeFileToFolder('works.html', generateWorksHtml());
+await writeFileToFolder('texts-data.json', JSON.stringify(textsData, null, 2));
+await writeFileToFolder('exhibitions-projects.html', generateExhibitionsListHtml());
+for(const e of exhibitionsData){
+await writeFileToFolder(e.link, generateExhibitionDetailHtml(e));
+}
+await writeFileToFolder('info.html', generateInfoHtml());
+try{ localStorage.removeItem(draftKey()); }catch(err){}
+document.getElementById('draft-status').textContent = '';
+showToast('저장 완료 · 작품 '+worksData.length+'개 · 글 '+textsData.length+'개 · 전시 '+exhibitionsData.length+'개');
+}catch(err){
+alert('저장 중 문제가 발생했습니다: ' + err.message);
 }
 }
 
-window.onload = function(){ updateUI(); };
+/* ===================== 초기화 ===================== */
+window.onload = function(){
+renderDynamicTextList('t-content-list', contentParagraphs, '문단 내용을 입력하세요', true);
+renderDynamicTextList('t-footnotes-list', footnoteLines, '각주 내용', false);
+renderDynamicTextList('e-statement-list', statementParagraphs, '서문 문단을 입력하세요', true);
+renderPhotoRows();
+fillInfoForm();
+setupAllDropzones();
+updateUI();
+};
 </script>
 </body>
 </html>
