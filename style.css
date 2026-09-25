@@ -418,7 +418,7 @@ main.info-main {
 .exhibition-title {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-base);
-  margin-bottom: 6px;
+  margin-bottom: 0;
 }
 
 
