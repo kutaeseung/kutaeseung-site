@@ -101,6 +101,7 @@ iframe{width:100%;flex:1;border:none;background:#fff;}
 </button>
 </div>
 </header>
+<datalist id="image-folder-list"></datalist>
 
 <div class="main-layout">
 <div class="edit-panel">
@@ -122,6 +123,14 @@ iframe{width:100%;flex:1;border:none;background:#fff;}
 <div class="dropzone" id="w-dropzone" onclick="triggerFileInput('w-file-input')">
 <div class="dz-label">이미지를 여기에 끌어다 놓거나 클릭해서 선택하세요</div>
 <input type="file" id="w-file-input" accept="image/*" style="display:none;" onchange="onWorkImagePicked(this.files)">
+</div>
+</div>
+
+<div class="form-group">
+<label>저장 위치 <span class="form-hint" style="display:inline;">(비워두면 기본 위치에 저장 · 목록에서 기존 폴더를 고르거나 직접 입력)</span></label>
+<div style="display:flex;gap:6px;">
+<input type="text" id="w-target-dir" list="image-folder-list" placeholder="images/selected-works" style="flex:1;">
+<button type="button" class="btn-mini" onclick="refreshImageFolderList()" title="내 폴더 안에 있는 하위 폴더 목록 새로고침">↻ 새로고침</button>
 </div>
 </div>
 
@@ -187,6 +196,13 @@ iframe{width:100%;flex:1;border:none;background:#fff;}
 <input type="file" id="e-file-input" accept="image/*" style="display:none;" onchange="onExhibitionThumbPicked(this.files)">
 </div>
 </div>
+<div class="form-group">
+<label>저장 위치 <span class="form-hint" style="display:inline;">(비워두면 기본 위치에 저장 · 목록에서 기존 폴더를 고르거나 직접 입력)</span></label>
+<div style="display:flex;gap:6px;">
+<input type="text" id="e-target-dir" list="image-folder-list" placeholder="images/exhibitions/amator" style="flex:1;">
+<button type="button" class="btn-mini" onclick="refreshImageFolderList()" title="내 폴더 안에 있는 하위 폴더 목록 새로고침">↻ 새로고침</button>
+</div>
+</div>
 <div class="form-group"><label>목록용 캡션</label><input type="text" id="e-caption" placeholder="아마토 Amator, Long Vacance, 2026"></div>
 <hr style="border:none;border-top:1px solid #eee;margin:2px 0;">
 <div class="hint">아래는 상세 페이지(전시 서문 + 설치 전경) 내용입니다.</div>
@@ -209,6 +225,11 @@ iframe{width:100%;flex:1;border:none;background:#fff;}
 <div class="dz-label">여러 장을 한 번에 끌어다 놓거나 클릭해서 선택하세요</div>
 <input type="file" id="e-photos-file-input" accept="image/*" multiple style="display:none;" onchange="onExhibitionPhotosPicked(this.files)">
 </div>
+<div style="display:flex;gap:6px;margin-top:6px;">
+<input type="text" id="e-photos-target-dir" list="image-folder-list" placeholder="images/exhibitions/amator" style="flex:1;">
+<button type="button" class="btn-mini" onclick="refreshImageFolderList()" title="내 폴더 안에 있는 하위 폴더 목록 새로고침">↻ 새로고침</button>
+</div>
+<div class="form-hint">저장 위치 — 비워두면 기본 위치에 저장 · 목록에서 기존 폴더를 고르거나 직접 입력</div>
 </div>
 
 <div class="form-group">
@@ -373,6 +394,7 @@ document.getElementById('btn-folder').classList.add('connected');
 document.getElementById('btn-reload').style.display = 'inline-block';
 document.getElementById('no-folder-banner').style.display = 'none';
 await loadDataFromFolder();
+await refreshImageFolderList();
 }catch(err){
 if(err.name !== 'AbortError') alert('폴더 연결에 실패했습니다: ' + err.message);
 }
@@ -406,31 +428,73 @@ const writable = await fileHandle.createWritable();
 await writable.write(arrayBuffer);
 await writable.close();
 }
-async function getImageObjectUrl(subpath, filename){
-if(!dirHandle || !filename) return null;
-const key = subpath+'/'+filename;
-if(imageUrlCache.has(key)) return imageUrlCache.get(key);
+/* 연결된 폴더의 images 안에 실제로 어떤 하위 폴더들이 있는지 훑어서 목록으로 만든다.
+   사용자가 직접 사진을 정리해둔 폴더(예: images/amator)를 "저장 위치" 칸에서
+   골라 쓸 수 있게 하기 위함 — 드래그 앤 드롭으로는 원본 파일이 있던 폴더를
+   브라우저가 알 수 없으므로, 목록에서 직접 고르게 하는 방식으로 해결한다. */
+async function listImageFolders(){
+const result = new Set(['images']);
+if(!dirHandle) return Array.from(result);
+async function walk(handle, prefix){
 try{
-const subDir = await getSubDirHandle(subpath);
+for await (const [name, child] of handle.entries()){
+if(child.kind === 'directory'){
+const path = prefix + '/' + name;
+result.add(path);
+await walk(child, path);
+}
+}
+}catch(err){ /* 폴더를 못 읽어도 무시하고 계속 */ }
+}
+try{
+const imagesDir = await dirHandle.getDirectoryHandle('images', {create:true});
+await walk(imagesDir, 'images');
+}catch(err){ /* images 폴더가 아직 없으면 기본값만 남긴다 */ }
+return Array.from(result).sort();
+}
+async function refreshImageFolderList(){
+const folders = await listImageFolders();
+const dl = document.getElementById('image-folder-list');
+if(dl) dl.innerHTML = folders.map(f=>`<option value="${escapeHtml(f)}">`).join('');
+return folders;
+}
+/* 이미지는 항상 "images/exhibitions/amator/photo.jpg"처럼 사이트 루트 기준 전체 경로로 저장하고
+   다룬다. 그래야 사용자가 폴더별로 나눠 정리해둔 구조를 그대로 유지할 수 있다. */
+function dirName(fullPath){
+const i = (fullPath||'').lastIndexOf('/');
+return i>-1 ? fullPath.slice(0,i) : '';
+}
+function baseName(fullPath){
+const i = (fullPath||'').lastIndexOf('/');
+return i>-1 ? fullPath.slice(i+1) : (fullPath||'');
+}
+async function getImageObjectUrl(fullPath){
+if(!dirHandle || !fullPath) return null;
+if(imageUrlCache.has(fullPath)) return imageUrlCache.get(fullPath);
+try{
+const dir = dirName(fullPath);
+const filename = fullPath.slice(dir.length ? dir.length+1 : 0);
+const subDir = await getSubDirHandle(dir);
 const fileHandle = await subDir.getFileHandle(filename);
 const file = await fileHandle.getFile();
 const url = URL.createObjectURL(file);
-imageUrlCache.set(key, url);
+imageUrlCache.set(fullPath, url);
 return url;
 }catch(err){
 return null;
 }
 }
-function invalidateImageCache(subpath, filename){
-imageUrlCache.delete(subpath+'/'+filename);
+function invalidateImageCache(fullPath){
+imageUrlCache.delete(fullPath);
 }
-async function saveImageFile(subpath, file){
+async function saveImageFile(targetDir, file){
 const name = sanitizeFilename(file.name);
 const buf = await file.arrayBuffer();
-await writeBinaryFile(subpath, name, buf);
-invalidateImageCache(subpath, name);
-imageUrlCache.set(subpath+'/'+name, URL.createObjectURL(file));
-return name;
+await writeBinaryFile(targetDir, name, buf);
+const fullPath = targetDir + '/' + name;
+invalidateImageCache(fullPath);
+imageUrlCache.set(fullPath, URL.createObjectURL(file));
+return fullPath;
 }
 
 /* ===================== 폴더에서 기존 데이터 읽어오기 ===================== */
@@ -440,8 +504,7 @@ const frames = doc.querySelectorAll('.work-frame');
 const result = [];
 frames.forEach(frame=>{
 const img = frame.querySelector('img');
-const src = img ? (img.getAttribute('src')||'') : '';
-const file = src.split('/').pop();
+const file = img ? (img.getAttribute('src')||'') : '';
 const styleAttr = frame.getAttribute('style') || '';
 const hMatch = styleAttr.match(/--h\s*:\s*([\d.]+)/);
 const h = hMatch ? hMatch[1] : '60';
@@ -467,7 +530,7 @@ const result = [];
 links.forEach(a=>{
 const link = a.getAttribute('href') || '';
 const img = a.querySelector('img');
-const imgFile = (img ? (img.getAttribute('src')||'') : '').split('/').pop();
+const imgFile = img ? (img.getAttribute('src')||'') : '';
 const capEl = a.querySelector('.caption-right, .caption-left');
 const caption = capEl ? capEl.textContent.trim() : '';
 result.push({link, img: imgFile, caption});
@@ -497,7 +560,7 @@ const photos = [];
 const photoContainer = doc.querySelector('.archive-photos') || doc.querySelector('.grid-right-8');
 if(photoContainer){
 photoContainer.querySelectorAll('img').forEach(img=>{
-const file = (img.getAttribute('src')||'').split('/').pop();
+const file = img.getAttribute('src')||'';
 const parent = img.closest('div') || img.parentElement;
 const capEl = parent ? parent.querySelector('.caption-right, .caption-left, figcaption') : null;
 const caption = capEl ? capEl.textContent.trim() : '';
@@ -598,6 +661,7 @@ async function reloadFromFolder(){
 if(!dirHandle){ alert('먼저 폴더를 연결하세요.'); return; }
 if(!confirm('저장하지 않은 편집 내용이 있다면 사라집니다. 폴더의 최신 파일로 다시 불러올까요?')) return;
 await loadDataFromFolder();
+await refreshImageFolderList();
 }
 
 /* ===================== 탭 전환 ===================== */
@@ -645,11 +709,18 @@ async function onWorkImagePicked(files){
 if(!files || !files[0]) return;
 if(!dirHandle){ alert('먼저 폴더를 연결해주세요.'); return; }
 const file = files[0];
-const name = await saveImageFile('images/selected-works', file);
+// "저장 위치" 칸에 직접 입력/선택한 폴더가 있으면 그걸 최우선으로 사용.
+// 비워뒀다면: 수정 중인 작품이 이미 있던 폴더 → 없으면 기본 폴더.
+const dirInput = document.getElementById('w-target-dir');
+const typedDir = dirInput ? dirInput.value.trim().replace(/\/+$/,'') : '';
+const targetDir = typedDir || (editingWorkIndex>-1 && dirName(worksData[editingWorkIndex].file)) || 'images/selected-works';
+const fullPath = await saveImageFile(targetDir, file);
 const dz = document.getElementById('w-dropzone');
-dz.dataset.file = name;
+dz.dataset.file = fullPath;
 dz.classList.add('has-image');
-dz.innerHTML = `<img src="${imageUrlCache.get('images/selected-works/'+name)}"><div class="dz-filename">${escapeHtml(name)} · 이미지를 다시 클릭하면 교체할 수 있어요</div>`;
+dz.innerHTML = `<img src="${imageUrlCache.get(fullPath)}"><div class="dz-filename">${escapeHtml(baseName(fullPath))} · 이미지를 다시 클릭하면 교체할 수 있어요</div>`;
+if(dirInput) dirInput.value = targetDir;
+refreshImageFolderList();
 }
 function editWork(idx){
 editingWorkIndex = idx;
@@ -662,9 +733,11 @@ document.getElementById('w-h').value = w.h;
 const dz = document.getElementById('w-dropzone');
 dz.dataset.file = w.file;
 dz.classList.add('has-image');
-getImageObjectUrl('images/selected-works', w.file).then(url=>{
-dz.innerHTML = `<img src="${url||''}"><div class="dz-filename">${escapeHtml(w.file)} · 이미지를 다시 클릭하면 교체할 수 있어요</div>`;
+getImageObjectUrl(w.file).then(url=>{
+dz.innerHTML = `<img src="${url||''}"><div class="dz-filename">${escapeHtml(baseName(w.file))} · 이미지를 다시 클릭하면 교체할 수 있어요</div>`;
 });
+const wDirInput = document.getElementById('w-target-dir');
+if(wDirInput) wDirInput.value = dirName(w.file) || '';
 document.getElementById('works-form-title').innerText = w.title || '작품 수정';
 document.getElementById('works-edit-badge').style.display = 'inline';
 document.getElementById('btn-save-work').innerText = '수정 내용 저장';
@@ -679,6 +752,8 @@ editingWorkIndex = -1;
 const dz = document.getElementById('w-dropzone');
 dz.dataset.file=''; dz.classList.remove('has-image');
 dz.innerHTML = `<div class="dz-label">이미지를 여기에 끌어다 놓거나 클릭해서 선택하세요</div><input type="file" id="w-file-input" accept="image/*" style="display:none;" onchange="onWorkImagePicked(this.files)">`;
+const wDirInputCancel = document.getElementById('w-target-dir');
+if(wDirInputCancel) wDirInputCancel.value = '';
 document.getElementById('works-form-title').innerText = '새 작품 추가하기';
 document.getElementById('works-edit-badge').style.display = 'none';
 document.getElementById('btn-save-work').innerText = '+ 목록에 작품 추가';
@@ -802,23 +877,49 @@ document.getElementById('e-link').value = slug + '.html';
 }
 document.getElementById('e-link').addEventListener('input', ()=>{ exhibitionFilenameTouched = true; });
 
+/* 이 전시의 사진을 저장할 폴더 결정: 이미 이미지가 있는 전시를 수정 중이면 그 사진이 있던
+   폴더를 그대로 재사용하고(=기존 정리 구조 유지), 새로 만드는 전시라면 전시마다 자동으로
+   구분되도록 "images/exhibitions/<파일명>/" 하위 폴더를 새로 만들어 사용한다. */
+function exhibitionImageDir(){
+if(editingExhibitionIndex>-1){
+const e = exhibitionsData[editingExhibitionIndex];
+const fromImg = dirName(e.img||'');
+if(fromImg) return fromImg;
+const fromPhoto = (e.photos&&e.photos[0]) ? dirName(e.photos[0].file||'') : '';
+if(fromPhoto) return fromPhoto;
+}
+let link = document.getElementById('e-link').value.trim();
+if(!link) link = 'exhibition-' + (exhibitionsData.length+1) + '.html';
+const slug = link.replace(/\.html?$/i,'') || ('exhibition-'+(exhibitionsData.length+1));
+return 'images/exhibitions/' + slug;
+}
 async function onExhibitionThumbPicked(files){
 if(!files || !files[0]) return;
 if(!dirHandle){ alert('먼저 폴더를 연결해주세요.'); return; }
-const name = await saveImageFile('images/exhibitions', files[0]);
+const dirInput = document.getElementById('e-target-dir');
+const typedDir = dirInput ? dirInput.value.trim().replace(/\/+$/,'') : '';
+const targetDir = typedDir || exhibitionImageDir();
+const fullPath = await saveImageFile(targetDir, files[0]);
 const dz = document.getElementById('e-dropzone');
-dz.dataset.file = name;
+dz.dataset.file = fullPath;
 dz.classList.add('has-image');
-dz.innerHTML = `<img src="${imageUrlCache.get('images/exhibitions/'+name)}"><div class="dz-filename">${escapeHtml(name)} · 이미지를 다시 클릭하면 교체할 수 있어요</div>`;
+dz.innerHTML = `<img src="${imageUrlCache.get(fullPath)}"><div class="dz-filename">${escapeHtml(baseName(fullPath))} · 이미지를 다시 클릭하면 교체할 수 있어요</div>`;
+if(dirInput) dirInput.value = targetDir;
+refreshImageFolderList();
 }
 async function onExhibitionPhotosPicked(files){
 if(!files || !files.length) return;
 if(!dirHandle){ alert('먼저 폴더를 연결해주세요.'); return; }
+const dirInput = document.getElementById('e-photos-target-dir');
+const typedDir = dirInput ? dirInput.value.trim().replace(/\/+$/,'') : '';
+const targetDir = typedDir || exhibitionImageDir();
 for(const file of files){
-const name = await saveImageFile('images/exhibitions', file);
-photoRows.push({file:name, caption:''});
+const fullPath = await saveImageFile(targetDir, file);
+photoRows.push({file:fullPath, caption:''});
 }
 renderPhotoRows();
+if(dirInput) dirInput.value = targetDir;
+refreshImageFolderList();
 }
 function renderPhotoRows(){
 const container = document.getElementById('e-photos-list');
@@ -831,7 +932,7 @@ handle.className = 'drag-handle'; handle.textContent = '⠿'; handle.title = '�
 const order = document.createElement('span');
 order.className = 'photo-order'; order.textContent = (i+1);
 const img = document.createElement('img');
-getImageObjectUrl('images/exhibitions', p.file).then(url=>{ if(url) img.src = url; });
+getImageObjectUrl(p.file).then(url=>{ if(url) img.src = url; });
 const capInput = document.createElement('input');
 capInput.type = 'text'; capInput.placeholder = '캡션 (선택, 비워두면 표시되지 않음)'; capInput.value = p.caption || '';
 capInput.oninput = ()=>{ photoRows[i].caption = capInput.value; };
@@ -855,13 +956,17 @@ document.getElementById('e-link').value = e.link || '';
 const dz = document.getElementById('e-dropzone');
 dz.dataset.file = e.img || '';
 dz.classList.add('has-image');
-getImageObjectUrl('images/exhibitions', e.img).then(url=>{
-dz.innerHTML = `<img src="${url||''}"><div class="dz-filename">${escapeHtml(e.img||'')} · 이미지를 다시 클릭하면 교체할 수 있어요</div>`;
+getImageObjectUrl(e.img).then(url=>{
+dz.innerHTML = `<img src="${url||''}"><div class="dz-filename">${escapeHtml(baseName(e.img||''))} · 이미지를 다시 클릭하면 교체할 수 있어요</div>`;
 });
+const eDirInput = document.getElementById('e-target-dir');
+if(eDirInput) eDirInput.value = dirName(e.img||'') || '';
 statementParagraphs = (e.statement||[]).slice();
 photoRows = (e.photos||[]).map(p=>({file:p.file, caption:p.caption||''}));
 renderDynamicTextList('e-statement-list', statementParagraphs, '서문 문단을 입력하세요', true);
 renderPhotoRows();
+const ePhotosDirInput = document.getElementById('e-photos-target-dir');
+if(ePhotosDirInput) ePhotosDirInput.value = (photoRows[0] && dirName(photoRows[0].file||'')) || dirName(e.img||'') || '';
 document.getElementById('exhibitions-form-title').innerText = e.caption || '전시 수정';
 document.getElementById('exhibitions-edit-badge').style.display = 'inline';
 document.getElementById('btn-save-exhibition').innerText = '수정 내용 저장';
@@ -874,6 +979,10 @@ exhibitionFilenameTouched = false;
 const dz = document.getElementById('e-dropzone');
 dz.dataset.file=''; dz.classList.remove('has-image');
 dz.innerHTML = `<div class="dz-label">이미지를 여기에 끌어다 놓거나 클릭해서 선택하세요</div><input type="file" id="e-file-input" accept="image/*" style="display:none;" onchange="onExhibitionThumbPicked(this.files)">`;
+const eDirInputCancel = document.getElementById('e-target-dir');
+if(eDirInputCancel) eDirInputCancel.value = '';
+const ePhotosDirInputCancel = document.getElementById('e-photos-target-dir');
+if(ePhotosDirInputCancel) ePhotosDirInputCancel.value = '';
 statementParagraphs = []; photoRows = [];
 renderDynamicTextList('e-statement-list', statementParagraphs, '서문 문단을 입력하세요', true);
 renderPhotoRows();
@@ -951,7 +1060,7 @@ document.getElementById('draft-status').textContent = document.getElementById('d
 document.getElementById('works-list').innerHTML = worksData.map((w,idx)=>`
 <div class="item-card ${editingWorkIndex===idx?'editing':''}" data-idx="${idx}">
 <span class="drag-handle">⠿</span>
-<img class="item-thumb" data-thumb="works:${escapeHtml(w.file)}">
+<img class="item-thumb" data-thumb="${escapeHtml(w.file)}">
 <div class="item-info"><strong>${idx+1}.</strong> ${escapeHtml(w.title)} (${escapeHtml(String(w.h))}cm) ${w.size?'· '+escapeHtml(w.size):''} ${w.material?'· '+escapeHtml(w.material):''}
 <div class="size-bar-track"><div class="size-bar-fill" style="width:${Math.min(100, (parseFloat(w.h)||0)/Math.max(1,...worksData.map(x=>parseFloat(x.h)||0))*100)}%;"></div></div>
 </div>
@@ -972,7 +1081,7 @@ document.getElementById('texts-list').innerHTML = textsData.map((t,idx)=>`
 document.getElementById('exhibitions-list').innerHTML = exhibitionsData.map((e,idx)=>`
 <div class="item-card ${editingExhibitionIndex===idx?'editing':''}" data-idx="${idx}">
 <span class="drag-handle">⠿</span>
-<img class="item-thumb" data-thumb="exhibitions:${escapeHtml(e.img)}">
+<img class="item-thumb" data-thumb="${escapeHtml(e.img)}">
 <div class="item-info"><strong>${idx+1}.</strong> ${escapeHtml(e.caption)}</div>
 <div class="item-controls">
 <button class="btn-mini edit" onclick="editExhibition(${idx})">수정</button>
@@ -981,10 +1090,9 @@ document.getElementById('exhibitions-list').innerHTML = exhibitionsData.map((e,i
 
 // 썸네일 비동기 채우기
 document.querySelectorAll('img.item-thumb[data-thumb]').forEach(async img=>{
-const [subfolder, filename] = img.dataset.thumb.split(':');
-if(!filename) return;
-const path = subfolder==='works' ? 'images/selected-works' : 'images/exhibitions';
-const url = await getImageObjectUrl(path, filename);
+const fullPath = img.dataset.thumb;
+if(!fullPath) return;
+const url = await getImageObjectUrl(fullPath);
 if(url) img.src = url;
 });
 
@@ -1144,7 +1252,7 @@ const WORKS_PAGE_STYLE = `  <style>
 
 function generateWorksHtml(){
 const items = worksData.map((w)=>`      <div class="work-frame" style="--h: ${escapeHtml(String(w.h))};" data-title="${escapeHtml(w.title)}" data-year="${escapeHtml(w.year)}" data-material="${escapeHtml(w.material)}" data-size="${escapeHtml(w.size)}">
-        <img src="images/selected-works/${escapeHtml(w.file)}" alt="${escapeHtml(w.title)}">
+        <img src="${escapeHtml(w.file)}" alt="${escapeHtml(w.title)}">
       </div>`).join('\n\n\n\n');
 return `<!DOCTYPE html>
 <html lang="en">
@@ -1221,7 +1329,7 @@ ${items}
 function generateExhibitionsListHtml(){
 const items = exhibitionsData.map(e=>`      <div class="grid-right-8">
         <a href="${escapeHtml(e.link)}" class="item-link">
-          <img src="images/exhibitions/${escapeHtml(e.img)}" alt="${escapeHtml(e.caption)}">
+          <img src="${escapeHtml(e.img)}" alt="${escapeHtml(e.caption)}">
           <p class="caption-right">${escapeHtml(e.caption)}</p>
         </a>
       </div>`).join('\n\n\n\n');
@@ -1255,7 +1363,7 @@ const statementHtml = (e.statement && e.statement.length)
 ? e.statement.map(escapeHtml).join('<br><br>\n            ')
 : '';
 const photosHtml = (e.photos||[]).map(p=>`        <div>
-          <img src="images/exhibitions/${escapeHtml(p.file)}" alt="${escapeHtml(p.caption || e.caption || '')}">${p.caption?`\n          <p class="caption-right">${escapeHtml(p.caption)}</p>`:''}
+          <img src="${escapeHtml(p.file)}" alt="${escapeHtml(p.caption || e.caption || '')}">${p.caption?`\n          <p class="caption-right">${escapeHtml(p.caption)}</p>`:''}
         </div>`).join('\n\n\n');
 return `<!DOCTYPE html>
 <html lang="en">
