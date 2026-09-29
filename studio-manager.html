@@ -589,7 +589,7 @@ const cvFile = cvEl ? (cvEl.getAttribute('href')||'').split('/').pop() : '';
 return {nameLine, bioLines:bio, email, phone, cvFile};
 }
 async function loadExhibitionsData(){
-const listFile = await tryReadFile('exhibitions-projects.html');
+const listFile = await tryReadFile('index.html');
 if(listFile === null) return null;
 const listItems = parseExhibitionsListPage(listFile.text);
 const combined = [];
@@ -672,7 +672,7 @@ document.getElementById('panel-works').style.display = mode==='works'?'flex':'no
 document.getElementById('panel-texts').style.display = mode==='texts'?'flex':'none';
 document.getElementById('panel-exhibitions').style.display = mode==='exhibitions'?'flex':'none';
 document.getElementById('panel-info').style.display = mode==='info'?'flex':'none';
-const titles = {works:'works.html 미리보기', texts:'texts.html 미리보기', exhibitions:'exhibitions-projects.html 미리보기', info:'info.html 미리보기'};
+const titles = {works:'works.html 미리보기', texts:'texts.html 미리보기', exhibitions:'index.html 미리보기', info:'info.html 미리보기'};
 document.getElementById('preview-bar-title').innerText = titles[mode];
 cancelEditWork(); cancelEditText(); cancelEditExhibition();
 updateUI();
@@ -913,13 +913,19 @@ if(!dirHandle){ alert('먼저 폴더를 연결해주세요.'); return; }
 const dirInput = document.getElementById('e-photos-target-dir');
 const typedDir = dirInput ? dirInput.value.trim().replace(/\/+$/,'') : '';
 const targetDir = typedDir || exhibitionImageDir();
+let skipped = 0;
 for(const file of files){
+// 저장될 경로를 먼저 계산해서, 이미 목록에 같은 사진이 있으면 중복으로 추가하지 않는다
+// (같은 위치에 이미 정리해둔 사진을 다시 끌어왔을 때 목록에 두 번 나타나는 것을 방지)
+const predictedPath = targetDir + '/' + sanitizeFilename(file.name);
+if(photoRows.some(p => p.file === predictedPath)){ skipped++; continue; }
 const fullPath = await saveImageFile(targetDir, file);
 photoRows.push({file:fullPath, caption:''});
 }
 renderPhotoRows();
 if(dirInput) dirInput.value = targetDir;
 refreshImageFolderList();
+if(skipped>0) showToast(skipped+'장은 이미 목록에 있는 사진이라 건너뛰었습니다.');
 }
 function renderPhotoRows(){
 const container = document.getElementById('e-photos-list');
@@ -1115,7 +1121,6 @@ const TYPEKIT_SCRIPT = `  <script>
     })(document);
   <\/script>`;
 const NAV_LINKS = [
-{key:'exhibitions', href:'exhibitions-projects.html', label:'Exhibitions &amp; Projects'},
 {key:'works', href:'works.html', label:'Selected Works'},
 {key:'texts', href:'texts.html', label:'Texts'},
 {key:'info', href:'info.html', label:'Info'},
@@ -1123,15 +1128,16 @@ const NAV_LINKS = [
 ];
 function navHtml(active){
 const links = NAV_LINKS.map(l=>`<a href="${l.href}" class="nav-link${l.key===active?' active':''}">${l.label}</a>`).join(' / ');
+const homeActive = active === 'home' ? ' active' : '';
 return `  <header>
-    <nav class="nav-text"><span class="nav-name"><a href="index.html" class="nav-link">Ku Taeseung</a></span><span class="nav-sep"> / </span><span class="nav-links">${links}</span></nav>
+    <nav class="nav-text"><span class="nav-name"><a href="index.html" class="nav-link${homeActive}">Ku Taeseung</a></span><span class="nav-sep"> / </span><span class="nav-links">${links}</span></nav>
   </header>`;
 }
 function pageHead(title, extraStyle){
 return `<head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Ku Taeseung - ${escapeHtml(title)}</title>
+  <title>Ku Taeseung${title ? ' - '+escapeHtml(title) : ''}</title>
 ${TYPEKIT_SCRIPT}
   <link rel="icon" href="favicon.ico">
   <link rel="stylesheet" href="style.css">${extraStyle ? '\n'+extraStyle : ''}
@@ -1327,19 +1333,19 @@ ${items}
 }
 
 function generateExhibitionsListHtml(){
-const items = exhibitionsData.map(e=>`      <div class="grid-right-8">
+const items = exhibitionsData.map(e=>`      <div class="grid-right-8 list-thumb">
         <a href="${escapeHtml(e.link)}" class="item-link">
-          <img src="${escapeHtml(e.img)}" alt="${escapeHtml(e.caption)}">
           <p class="caption-right">${escapeHtml(e.caption)}</p>
+          <img src="${escapeHtml(e.img)}" alt="${escapeHtml(e.caption)}">
         </a>
       </div>`).join('\n\n\n\n');
 return `<!DOCTYPE html>
 <html lang="en">
-${pageHead('Exhibitions &amp; Projects')}
+${pageHead('')}
 <body>
 
 
-${navHtml('exhibitions')}
+${navHtml('home')}
 
 
   <main>
@@ -1371,7 +1377,7 @@ ${pageHead(e.title || e.caption || 'Exhibition')}
 <body>
 
 
-${navHtml('exhibitions')}
+${navHtml('home')}
 
 
   <main>
@@ -1498,7 +1504,7 @@ if(!dirHandle){ alert('먼저 폴더를 연결해주세요.'); return; }
 try{
 await writeFileToFolder('works.html', generateWorksHtml());
 await writeFileToFolder('texts-data.json', JSON.stringify(textsData, null, 2));
-await writeFileToFolder('exhibitions-projects.html', generateExhibitionsListHtml());
+await writeFileToFolder('index.html', generateExhibitionsListHtml());
 for(const e of exhibitionsData){
 await writeFileToFolder(e.link, generateExhibitionDetailHtml(e));
 }

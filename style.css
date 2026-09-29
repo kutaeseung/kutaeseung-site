@@ -21,7 +21,7 @@
   /* 전역 텍스트 통일: 16px, 400(Normal), 행간 1.5 */
   --font-size-base: 16px;
   --font-weight-base: 400;
-  --line-height-base: 1.5;
+  --line-height-base: 1.65;
 
 
   --header-top-padding: 16px;
@@ -100,7 +100,7 @@ h1, h2, h3, h4, h5, h6, p, a, span, div {
 header {
   position: static;
   width: 100%;
-  padding: var(--header-top-padding) var(--page-padding) 0 var(--page-padding);
+  padding: var(--header-top-padding) var(--page-padding);
   background: transparent;
 }
 
@@ -137,7 +137,7 @@ header {
    4. Main Content Layout
 ==================================================== */
 main {
-  padding: 40px var(--page-padding) 100px var(--page-padding);
+  padding: 10px var(--page-padding) 100px var(--page-padding);
   width: 100%;
 }
 
@@ -168,7 +168,7 @@ main {
 .reader-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0;
 }
 
 
@@ -213,7 +213,7 @@ main {
   width: 100%;
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-base);
-  line-height: 1.65;
+  line-height: var(--line-height-base);
   text-align: left;
   word-break: keep-all;
 }
@@ -369,6 +369,27 @@ main.info-main {
 
 
 
+/* Exhibitions & Projects 목록 페이지: 사진은 오른쪽 정렬, 캡션은 사진 왼쪽에 붙어서 하단 정렬 */
+.list-thumb .item-link {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: var(--page-padding);
+}
+
+.list-thumb .item-link img {
+  width: 50% !important;
+  max-width: 50% !important;
+  flex-shrink: 0;
+}
+
+.list-thumb .caption-right {
+  margin-top: 0;
+  white-space: normal;
+}
+
+
+
 .grid-12 img,
 .grid img,
 .item-block img,
@@ -436,7 +457,7 @@ main.info-main {
 .exhibition-statement {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-base);
-  line-height: 1.65;
+  line-height: var(--line-height-base);
   text-align: left;
 }
 
@@ -458,13 +479,13 @@ main.info-main {
     --header-top-padding: 14px;
     --page-padding: 20px;
     --grid-gap: 16px;
-    --font-size-base: 14px;
+    --font-size-base: 16px;
   }
 
 
 
   header {
-    padding: var(--header-top-padding) var(--page-padding) 0 var(--page-padding);
+    padding: var(--header-top-padding) var(--page-padding);
   }
 
 
@@ -490,7 +511,7 @@ main.info-main {
 
 
   main {
-    padding: 24px var(--page-padding) 40px var(--page-padding);
+    padding: 12px var(--page-padding) 40px var(--page-padding);
   }
 
 
@@ -548,8 +569,6 @@ main.info-main {
   }
 
   .reader-link {
-    font-size: 12px;
-    line-height: 1.35;
     word-break: keep-all;
   }
 }
