@@ -18,8 +18,8 @@
   --font-serif: "Times New Roman", Times, "AppleMyungjo", "Apple 명조", "agchoijeongho-screen", "NanumMyeongjo", "Batang", "바탕", serif;
 
 
-  /* 전역 텍스트 통일: 15px, 400(Normal), 행간 1.5 */
-  --font-size-base: 15px;
+  /* 전역 텍스트 통일: 16px, 400(Normal), 행간 1.5 */
+  --font-size-base: 16px;
   --font-weight-base: 400;
   --line-height-base: 1.5;
 
