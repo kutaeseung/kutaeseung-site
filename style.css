@@ -334,7 +334,7 @@ main.info-main {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   column-gap: var(--grid-gap);
-  row-gap: 60px;
+  row-gap: 30px;
   width: 100%;
 }
 
