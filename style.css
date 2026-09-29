@@ -490,25 +490,6 @@ main.info-main {
   }
 
 
-  /* 8-1. 헤더 내비게이션: "Ku Taeseung" 줄바꿈 후 나머지 링크 */
-  .nav-text {
-    white-space: normal;
-    display: block;
-  }
-
-  .nav-name {
-    display: block;
-  }
-
-  .nav-sep {
-    display: none;
-  }
-
-  .nav-links {
-    display: block;
-    margin-top: 6px;
-  }
-
 
 
   main {
