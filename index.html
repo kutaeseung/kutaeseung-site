@@ -29,12 +29,48 @@
 
   <main>
     <div class="exhibitions-index">
-      <p><a href="Amator.html" class="reader-link">아마토 Amator, 2026</a></p>
-      <p><a href="BTRBaO.html" class="reader-link">Before This River Becomes an Ocean, 2025</a></p>
-      <p><a href="KoW.html" class="reader-link">Knock on Wood, 2024</a></p>
+      <div class="exhibition-index-item">
+        <p><a href="Amator.html" class="reader-link">아마토 Amator<span style="font-style: normal;">, 2026</span></a></p>
+        <p class="exhibition-filelist"><a href="images/exhibitions/Amator/Amator_74_web.jpg" class="reader-link file-link">Amator_74_web.jpg</a>, <a href="images/exhibitions/Amator/Amator_75_web.jpg" class="reader-link file-link">Amator_75_web.jpg</a>, <a href="images/exhibitions/Amator/Amator_76_web.jpg" class="reader-link file-link">Amator_76_web.jpg</a>, <a href="images/exhibitions/Amator/Amator_77_web.jpg" class="reader-link file-link">Amator_77_web.jpg</a>, <a href="images/exhibitions/Amator/Amator_78_web.jpg" class="reader-link file-link">Amator_78_web.jpg</a>, <a href="images/exhibitions/Amator/Amator_79_web.jpg" class="reader-link file-link">Amator_79_web.jpg</a>, <a href="images/exhibitions/Amator/Amator_80_web.jpg" class="reader-link file-link">Amator_80_web.jpg</a>, <a href="images/exhibitions/Amator/Amator_81_web.jpg" class="reader-link file-link">Amator_81_web.jpg</a>, <a href="images/exhibitions/Amator/Amator_55_web.jpg" class="reader-link file-link">Amator_55_web.jpg</a>, <a href="images/exhibitions/Amator/Amator_54_web.jpg" class="reader-link file-link">Amator_54_web.jpg</a>, <a href="images/exhibitions/Amator/Amator_51_web.jpg" class="reader-link file-link">Amator_51_web.jpg</a></p>
+      </div>
+
+
+      <div class="exhibition-index-item">
+        <p><a href="BTRBaO.html" class="reader-link">Before This River Becomes an Ocean<span style="font-style: normal;">, 2025</span></a></p>
+        <p class="exhibition-filelist"><a href="images/exhibitions/BTRBaO/BTRBaO_web23.jpg" class="reader-link file-link">BTRBaO_web23.jpg</a>, <a href="images/exhibitions/BTRBaO/BTRBaO_web5.jpg" class="reader-link file-link">BTRBaO_web5.jpg</a>, <a href="images/exhibitions/BTRBaO/BTRBaO_web32.jpg" class="reader-link file-link">BTRBaO_web32.jpg</a>, <a href="images/exhibitions/BTRBaO/BTRBaO_web10.jpg" class="reader-link file-link">BTRBaO_web10.jpg</a>, <a href="images/exhibitions/BTRBaO/BTRBaO_web3.jpg" class="reader-link file-link">BTRBaO_web3.jpg</a>, <a href="images/exhibitions/BTRBaO/BTRBaO_web11.jpg" class="reader-link file-link">BTRBaO_web11.jpg</a>, <a href="images/exhibitions/BTRBaO/BTRBaO_web13.jpg" class="reader-link file-link">BTRBaO_web13.jpg</a>, <a href="images/exhibitions/BTRBaO/BTRBaO_web38.jpg" class="reader-link file-link">BTRBaO_web38.jpg</a></p>
+      </div>
+
+
+      <div class="exhibition-index-item">
+        <p><a href="KoW.html" class="reader-link">Knock on Wood<span style="font-style: normal;">, 2024</span></a></p>
+        <p class="exhibition-filelist"><a href="images/exhibitions/KoW/KoW_102.jpg" class="reader-link file-link">KoW_102.jpg</a>, <a href="images/exhibitions/KoW/KoW_9.jpg" class="reader-link file-link">KoW_9.jpg</a>, <a href="images/exhibitions/KoW/KoW_111.jpg" class="reader-link file-link">KoW_111.jpg</a>, <a href="images/exhibitions/KoW/KoW_27.jpg" class="reader-link file-link">KoW_27.jpg</a>, <a href="images/exhibitions/KoW/KoW_69.jpg" class="reader-link file-link">KoW_69.jpg</a>, <a href="images/exhibitions/KoW/KoW_76.jpg" class="reader-link file-link">KoW_76.jpg</a>, <a href="images/exhibitions/KoW/KoW_60.jpg" class="reader-link file-link">KoW_60.jpg</a></p>
+      </div>
     </div>
   </main>
 
+
+
+  <script>
+    document.querySelectorAll('.file-link').forEach(function(link) {
+      const text = link.textContent;
+      const src = link.getAttribute('href');
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (link.querySelector('img')) {
+          link.textContent = text;
+        } else {
+          link.innerHTML = '';
+          const img = document.createElement('img');
+          img.src = src;
+          img.alt = text;
+          img.className = 'inline-thumb';
+          link.appendChild(img);
+        }
+      });
+    });
+  </script>
+
+  <script src="kr-scale.js"></script>
 
 
 </body>

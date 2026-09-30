@@ -255,25 +255,14 @@ main {
 /* ====================================================
    6. Info Page: 정중앙
 ==================================================== */
-main.info-main {
-  padding: 0 var(--page-padding) !important;
-  min-height: calc(100vh - 120px) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 100% !important;
-}
+
 
 
 
 .info-card {
-  text-align: center !important;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
   gap: 16px;
-  margin: auto !important;
 }
 
 
@@ -340,20 +329,6 @@ main.info-main {
 
 
 
-.col-1  { grid-column: span 1; }
-.col-2  { grid-column: span 2; }
-.col-3  { grid-column: span 3; }
-.col-4  { grid-column: span 4; }
-.col-5  { grid-column: span 5; }
-.col-6  { grid-column: span 6; }
-.col-7  { grid-column: span 7; }
-.col-8  { grid-column: span 8; }
-.col-9  { grid-column: span 9; }
-.col-10 { grid-column: span 10; }
-.col-11 { grid-column: span 11; }
-.col-12 { grid-column: span 12; }
-
-
 
 .grid-left-4 {
   grid-column: 1 / 5;
@@ -361,38 +336,16 @@ main.info-main {
 
 
 
-.grid-right-8,
-.item-block {
+.grid-right-8 {
   grid-column: 5 / 13;
   width: 100%;
 }
 
 
 
-/* Exhibitions & Projects 목록 페이지: 사진은 오른쪽 정렬, 캡션은 사진 왼쪽에 붙어서 하단 정렬 */
-.list-thumb .item-link {
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
-  gap: var(--page-padding);
-}
-
-.list-thumb .item-link img {
-  width: 50% !important;
-  max-width: 50% !important;
-  flex-shrink: 0;
-}
-
-.list-thumb .caption-right {
-  margin-top: 0;
-  white-space: normal;
-}
-
-
 
 .grid-12 img,
 .grid img,
-.item-block img,
 .archive-photos img {
   width: 100% !important;
   max-width: 100% !important;
@@ -403,43 +356,41 @@ main.info-main {
 
 
 
-.item-link {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-  cursor: pointer;
-  width: 100%;
+.exhibition-index-item {
+  margin-bottom: 32px;
+}
+
+.exhibition-index-item > p:first-child {
+  font-style: italic;
+}
+
+.exhibition-filelist {
+  margin-top: 8px;
+  line-height: 1.6;
+  font-size: 12.5px;
+}
+
+.exhibition-filelist .reader-link {
+  font-size: 12.5px;
+}
+
+.inline-thumb {
+  max-height: 56px;
+  width: auto;
+  vertical-align: middle;
+  display: inline-block;
+  background-color: #e9e9e9;
 }
 
 
 
-
-
-
-.caption-right {
-  margin-top: 10px;
-  text-align: right;
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-base);
-  color: var(--text-color);
-  white-space: nowrap;
-}
-
-
-
-.caption-left {
-  margin-top: 10px;
-  text-align: left;
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-base);
-  color: var(--text-color);
-}
 
 
 
 .exhibition-title {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-base);
+  font-style: italic;
   margin-bottom: 0;
 }
 
@@ -498,12 +449,6 @@ main.info-main {
 
 
 
-  main.info-main {
-    min-height: calc(100vh - 60px) !important;
-  }
-
-
-
   .grid-12,
   .grid {
     grid-template-columns: 1fr;
@@ -512,19 +457,11 @@ main.info-main {
 
 
 
-  .col-1, .col-2, .col-3, .col-4, .col-5, .col-6,
-  .col-7, .col-8, .col-9, .col-10, .col-11, .col-12,
   .grid-left-4,
-  .grid-right-8,
-  .item-block {
+  .grid-right-8 {
     grid-column: 1 / -1 !important;
   }
 
-
-
-  .caption-right {
-    white-space: normal;
-  }
 
 
   /* 8-2. Texts 리더 뷰: 목차를 오른쪽, 본문을 왼쪽에 배치
@@ -553,4 +490,12 @@ main.info-main {
   .reader-link {
     word-break: keep-all;
   }
+}
+
+
+
+
+/* 한글/영문 혼용 시 한글이 커 보이는 현상 보정 (kr-scale.js가 한글에 .kr 클래스를 자동으로 붙임) */
+.kr {
+  font-size: 0.9em;
 }
