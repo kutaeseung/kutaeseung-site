@@ -267,13 +267,6 @@ main {
 
 
 
-.info-name {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-base);
-}
-
-
-
 .info-desc {
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-base);
