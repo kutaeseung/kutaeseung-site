@@ -192,7 +192,11 @@ iframe{width:100%;flex:1;border:none;background:#fff;}
 <div class="form-group"><label>전시 제목</label><input type="text" id="e-title" placeholder="아마토 Amator" oninput="suggestExhibitionFilename()"></div>
 <div class="row">
 <div class="form-group"><label>장소 / 부제</label><input type="text" id="e-venue" placeholder="Long Vacance"></div>
-<div class="form-group"><label>기간 (연도 포함)</label><input type="text" id="e-daterange" placeholder="2026. 00. 00 – 00. 00"></div>
+<div class="form-group"><label>기간 (전시인 경우, 연도 포함)</label><input type="text" id="e-daterange" placeholder="2026. 00. 00 – 00. 00"></div>
+</div>
+<div class="form-group">
+<label>연도만 입력 <span class="form-hint" style="display:inline;">(프로젝트처럼 정확한 기간을 적기 애매한 경우 — 기간 대신 이 칸만 채우세요)</span></label>
+<input type="text" id="e-year" placeholder="2026">
 </div>
 
 <div class="form-group">
@@ -924,7 +928,9 @@ exhibitionFilenameTouched = true;
 const e = exhibitionsData[idx];
 document.getElementById('e-title').value = e.title || '';
 document.getElementById('e-venue').value = e.venue || '';
-document.getElementById('e-daterange').value = e.dateRange || '';
+const isYearOnly = /^\d{4}$/.test((e.dateRange||'').trim());
+document.getElementById('e-daterange').value = isYearOnly ? '' : (e.dateRange || '');
+document.getElementById('e-year').value = isYearOnly ? e.dateRange.trim() : '';
 document.getElementById('e-link').value = e.link || '';
 document.getElementById('e-statement').value = (e.statement||[]).join('\n\n');
 photoRows = (e.photos||[]).map(p=>({file:p.file, caption:p.caption||'', w:p.w, h:p.h}));
@@ -939,7 +945,7 @@ document.getElementById('btn-cancel-exhibition').style.display = 'inline-block';
 function cancelEditExhibition(){
 editingExhibitionIndex = -1;
 exhibitionFilenameTouched = false;
-['e-title','e-venue','e-daterange','e-link'].forEach(id=>document.getElementById(id).value='');
+['e-title','e-venue','e-daterange','e-year','e-link'].forEach(id=>document.getElementById(id).value='');
 const ePhotosDirInputCancel = document.getElementById('e-photos-target-dir');
 if(ePhotosDirInputCancel) ePhotosDirInputCancel.value = '';
 document.getElementById('e-statement').value = '';
@@ -953,7 +959,7 @@ document.getElementById('btn-cancel-exhibition').style.display = 'none';
 function saveExhibition(){
 const title = document.getElementById('e-title').value.trim();
 const venue = document.getElementById('e-venue').value.trim();
-const dateRange = document.getElementById('e-daterange').value.trim();
+const dateRange = document.getElementById('e-daterange').value.trim() || document.getElementById('e-year').value.trim();
 let link = document.getElementById('e-link').value.trim();
 const statement = document.getElementById('e-statement').value.split(/\n\s*\n/).map(p=>p.trim()).filter(p=>p);
 const photos = photoRows.map(p=>({file:p.file, caption:(p.caption||'').trim(), w:p.w, h:p.h}));
