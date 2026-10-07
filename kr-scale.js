@@ -1,5 +1,5 @@
 (function () {
-  var KR_RE = /[가-힣ᄀ-ᇿ㄰-㆏]+/g;
+  var KR_RE = /[“‘「『]*[가-힣ᄀ-ᇿ㄰-㆏]+/g; // 여는 따옴표도 한글과 같은 span에 넣어야 ::first-letter(드롭캡)가 따옴표+글자를 함께 잡음
 
   function scaleKorean(root) {
     var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
